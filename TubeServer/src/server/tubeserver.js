@@ -1,11 +1,19 @@
-class TubeServer{
+const PacketHandler = require('../packet/packethandler');
 
-    constructor(io){
+class TubeServer{
+    
+    constructor(main, io, accHan){
+        this.main = main;
         this.ioServer = io;
+
+        this.pacHan = new PacketHandler(main, this, accHan);
+
+        this.onConnection = this.onConnection.bind(this);
+        this.onDisconnect = this.onDisconnect.bind(this);
     }
 
     init(){
-        this.ioServer.on('connection', this.onConnection.bind(this));
+        this.ioServer.on('connection', this.onConnection);
     }
 
     initSocket(socket){
@@ -13,11 +21,25 @@ class TubeServer{
     }
 
     onConnection(socket){
-
+        console.log("[", socket.id,"] has connected");
+        socket.on('login', this.pacHan.getEventHandler(socket, PacketHandler.Events.LOGIN));
+        socket.on('disconnect', this.onDisconnect(socket));
     }
 
-    onDisconnection(socket){
+    onDisconnect(socket){
+        const discHandler = this.pacHan.getEventHandler(socket, PacketHandler.Events.DISCONNECT);
+        return function(packet){
+            console.log("[", socket.id,"] has disconnected");
+            discHandler(packet);
+        }
+    }
 
+    getPacketHandler(){
+        return this.pacHan;
+    }
+
+    sendPacket(socket, event, packet){
+        socket.emit('data', packet);
     }
 
 }

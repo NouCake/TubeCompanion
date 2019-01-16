@@ -1,7 +1,7 @@
 const fs = require('fs');
 const TubeData = require('./tubedata');
 
-class DataManager{
+class DataHandler{
 
     constructor(main){
         this.main = main;
@@ -103,4 +103,4 @@ class DataManager{
 
 }
 
-module.exports = DataManager;
+module.exports = DataHandler;
