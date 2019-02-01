@@ -1,7 +1,21 @@
+//For Docs
+const TubeCompanion = require('../tubecompanion');
+const TubeServer = require('../server/tubeserver');
+const AccountHandler = require('../account/accounthandler');
+const Socket = require('socket.io/lib/socket');
+
+//Needed Imports
 const SamplePackets = require('./samplepackets');
 const TubeTypes = require('../tubetypes');
+
 class PacketHandler{
 
+    /**
+     * 
+     * @param {TubeCompanion} main 
+     * @param {TubeServer} server 
+     * @param {AccountHandler} accHan 
+     */
     constructor(main, server, accHan){
         this.main = main;
         this.server = server;
@@ -11,6 +25,12 @@ class PacketHandler{
         this.error = "No Error found";
     }
 
+    /**
+     * Returns a event handler function that is bind to this
+     * @param {Socket} socket 
+     * @param {String} event 
+     * @returns {Function} event handler function
+     */
     getEventHandler(socket, event){
         let handler = null;
 
@@ -25,11 +45,17 @@ class PacketHandler{
 
 
         //CamelCase: event => handleEvent
+        //           login => handleLogin
         event = "handle" + event.charAt(0).toUpperCase().concat(event.substr(1));
         handler = this[event].bind(this);
         return (packet => {handler(socket, packet)});
     }
 
+    /**
+     * Compares an Object with a sample packet by attributes
+     * @param {Any} packet Any Object to be compares with given sample packet
+     * @param {Number} type Type of SamplePacket
+     */
     compareWithSamplePacket(packet, type){
         if(!packet){
             this.error = "Packet is null";
@@ -54,6 +80,12 @@ class PacketHandler{
         return true;
     }
 
+    /**
+     * Parses given object,
+     * does not crash server if object cannot be parsed,
+     * returns null in this case
+     * @param {String} packet 
+     */
     parsePacket(packet){
         try{
             return JSON.parse(packet);
@@ -62,6 +94,12 @@ class PacketHandler{
         }
     }
 
+    /**
+     * EVENT: LOGIN
+     * handles a packet that is received on event listener
+     * @param {Socket} socket socket which sent this packet
+     * @param {SamplePackets.LoginPacket} packet (yet)unknown packet
+     */
     handleLogin(socket, packet){
         if(!this.accHan.findAccountBySocket(socket)){
             packet = this.parsePacket(packet);
@@ -71,13 +109,21 @@ class PacketHandler{
             }
             if(this.compareWithSamplePacket(packet, TubeTypes.LOGIN)){
                 this.main.onLoginAttempt(socket, packet.apptype, packet.username, packet.password);
+            } else {
+                this.server.sendMessage(socket, this.error);
             }
         } else {
             sendLoginResponse(socket, TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION);
         }
     }
     
-    handleDisconnect(socket, packet){
+
+    /**
+     * EVENT: DISCONNECT
+     * handles a packet that is received on event listener
+     * @param {Socket} socket socket which sent this packet
+     */
+    handleDisconnect(socket){
         let account = this.accHan.findAccountBySocket(socket);
         if(account){
             this.main.onLogout(socket, account);
@@ -86,6 +132,28 @@ class PacketHandler{
         }
     }
 
+
+    /**
+     * EVENT: YT
+     * handles a packet that is received on event listener
+     * @param {Socket} socket socket which sent this packet
+     * @param {SamplePackets} packet (yet)unknown packet
+     */
+    handleYt(socket, packet){
+        let account = this.accHan.findAccountBySocket(socket);
+
+        if(!account){
+            this.server.sendMessage(socket, "");
+            return;
+        }
+
+    }
+
+    /**
+     * Sends a LoginResponsePacket to given socket
+     * @param {Socket} socket 
+     * @param {Number} res Response Type
+     */
     sendLoginResponse(socket, res){
         let packet = Object.assign({}, SamplePackets.LoginResponsePacket);
         packet.res = res;
@@ -96,7 +164,8 @@ class PacketHandler{
 
 PacketHandler.Events = {
     LOGIN: "login",
-    DISCONNECT: "disconnect"
+    DISCONNECT: "disconnect",
+    YT: "yt"
 }
 
 module.exports = PacketHandler;

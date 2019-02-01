@@ -1,20 +1,46 @@
+//For Docs
+const Socket = require('socket.io/lib/socket');
+
+//Needed Imports
 const TubeTypes = require('../tubetypes');
 
 class Account {
     
+    /**
+     * 
+     * @param {String} id 
+     * @param {String} username 
+     * @param {String} password 
+     */
     constructor(id, username, password){
         this.id = id;
         this.username = username;
         this.password = password;
-    
+
         this._hasClient = false;
         this._hasDevice = false;
+        
+        /**
+         * Client Socket, is filled only when client is connected
+         * @type {Socket}
+         */
         this.client = null;
+        
+        /**
+         * Device Socket, is filled only when device is connected
+         * @type {Socket}
+         */
         this.device = null;
 
         this._error = "";
     }
-  
+    
+    /**
+     * 
+     * @param {String} username 
+     * @param {String} password 
+     * @returns {Boolean} true if login is matching
+     */
     matches(username, password){
       username = username.toLowerCase().trim();
       let thisname = this.username.toLowerCase().trim();
@@ -22,6 +48,11 @@ class Account {
       return thisname == username && this.password == password;
     }
 
+    /**
+     * 
+     * @param {Socket} socket 
+     * @param {Number} apptype 
+     */
     loginSocket(socket, apptype){
         switch(apptype){
             case TubeTypes.LOGIN_DEVICE:
@@ -34,6 +65,10 @@ class Account {
         }
     }
 
+    /**
+     * 
+     * @param {Socket} socket 
+     */
     logoutSocket(socket){
         if(this.hasClient()){
             if(this.client.id == socket.id){
@@ -50,6 +85,10 @@ class Account {
         return false;
     }
 
+    /**
+     * 
+     * @param {Socket} socket 
+     */
     hasSocket(socket){
         if(socket){
             return (this.hasDevice() && socket.id == this.device.id) || 

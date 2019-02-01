@@ -8,6 +8,10 @@ class AccountHandler{
         this.addAccount(new Account(0, "NouCake", "123456"))
     }
 
+    /**
+     * 
+     * @param {Account} account 
+     */
     addAccount(account){
         this._accounts.push(account);
     }

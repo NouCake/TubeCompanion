@@ -1,10 +1,15 @@
+//For Docs
+const Socket = require('socket.io/lib/socket');
+const Account = require('./account/account');
+
+//Needed Imports
 const TubeServer = require('./server/tubeserver');
 const DataHandler = require('./data/datahandler');
 const AccountHandler = require('./account/accounthandler');
 const TubeTypes = require('./tubetypes');
 
 class TubeCompanion{
-
+    
     constructor(ioserver){
         this.accHan = new AccountHandler();
         this.dataHan = new DataHandler(this);
@@ -17,6 +22,13 @@ class TubeCompanion{
         this.server.init();
     }
 
+    /**
+     * Try to find an account with matching login-data and registers socket to account
+     * @param {Socket} socket 
+     * @param {Number} apptype 
+     * @param {String} username 
+     * @param {String} password 
+     */
     onLoginAttempt(socket, apptype, username, password){
         let account = this.accHan.findAccountByUsername(username);
         let res = 0;
@@ -37,6 +49,11 @@ class TubeCompanion{
         this.pacHan.sendLoginResponse(socket, res);
     }
 
+    /**
+     * removes socket from given account
+     * @param {Socket} socket 
+     * @param {Account} account 
+     */
     onLogout(socket, account){
         const apptype = account.logoutSocket(socket);
         if(apptype){
