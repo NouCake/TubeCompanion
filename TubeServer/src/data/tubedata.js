@@ -5,26 +5,32 @@ class TubeData {
         this.title = false;
         this.audiosize = -1;
         this.imagesize = -1;
+        this.videosize = -1;
 
         this._complete = false;
+        this._hasMeta = false;
         this._hasImage = false;
         this._hasAudio = false;
+        this._hasVideo = false;
     }
 
     getSaveData(){
         return {
             id:this.id,
             title:this.title,
-            audiosize:this.audiosize,
             imagesize:this.imagesize,
-            audio:this._hasAudio,
+            audiosize:this.audiosize,
+            videosize:this.videosize,
+            meta:this._hasMeta,
             image:this._hasImage,
+            audio:this._hasAudio,
+            video:this._hasVideo,
             complete:this._complete
         }
     }
 
     updateCompleteStatus(){
-        if(this.title && this._hasImage && this._hasAudio){
+        if(this._hasMeta && this._hasImage && this._hasAudio && this._hasVideo){
             this._complete = true;
         }
         return this._complete;
@@ -42,7 +48,14 @@ class TubeData {
         this.updateCompleteStatus();
     }
 
-    setTitle(title){
+    setVideo(size){
+        this._hasVideo = true;
+        this.videosize = size;
+        this.updateCompleteStatus();
+    }
+
+    setMeta(title){
+        this._hasMeta = true;
         this.title = title;
         this.updateCompleteStatus();
     }
@@ -60,13 +73,15 @@ TubeData.create = function(ref){
 
     //Renaming attributes;
     ref._complete = ref.complete;
-    ref._hasAudio = ref.audio;
+    ref._hasMeta = ref.meta;
     ref._hasImage = ref.image;
+    ref._hasAudio = ref.audio;
+    ref._hasVideo = ref.video;
 
     let data = new TubeData(ref.id);
     for(let attr in data){
         if(ref[attr] == null){
-            console.log("Error while creating DataObject:\nrefference is missing " + attr, ref);
+            console.log("Error while creating DataObject:\nreference is missing:" + attr, ref);
             return;
         }
         data[attr] = ref[attr];

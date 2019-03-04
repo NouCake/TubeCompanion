@@ -45,7 +45,6 @@ class TubeCompanion{
             res = TubeTypes.LOGIN_SUCCESS;
             console.log(`(${apptype}) ${account.username} has logged in`);
         }
-        
         this.pacHan.sendLoginResponse(socket, res);
     }
 

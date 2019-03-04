@@ -1,0 +1,9 @@
+How do threads work with node?
+how do scaling web apps work?
+
+multiple users should be able do request downloads.
+server shouldnt block while downloading and doesn't have to download multiple files at once.
+but server should be possible to send files to multiple users parallel.
+
+so maybe there should always be a thread listening to new incoming calls.
+does socket.io already do this? idk

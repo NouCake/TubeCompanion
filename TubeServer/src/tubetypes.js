@@ -29,6 +29,7 @@ module.exports = {
     //FILE TYPES
     FILE_IMAGE:                 300,
     FILE_AUDIO:                 301,
+    FILE_VIDEO:                 302,
 
     //MISC
     DEFAULT_VALUE: -8555 //Random magic number

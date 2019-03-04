@@ -1,5 +1,6 @@
 const fs = require('fs');
 const TubeData = require('./tubedata');
+const TubeTypes = require('../tubetypes')
 
 class DataHandler{
 
@@ -23,7 +24,7 @@ class DataHandler{
         }
     }
 
-    initData(id){
+    addData(id){
         if(this.data[id] != null){
             console.log("Entry with this id already exists");
             return;
@@ -33,6 +34,37 @@ class DataHandler{
 
     hasData(id){
         return this.data[id] != null;
+    }
+
+    /**
+     * returns the requested data, if data does not exist returns null/undefined
+     * @param {String} id 
+     * @returns {TubeData}
+     */
+    getData(id){
+        return this.data[id];
+    }
+
+    /**
+     * returns path to desired file
+     * @param {TubeData} data 
+     * @param {FILE_TYPE} FILE_TYPE TubeTypes.FileTypes
+     */
+    getDataFilePath(data, FILE_TYPE){
+        let path = this.dataPath + data.id + "/" + data.id;
+        let ending = ".error";
+        switch(FILE_TYPE){
+            case TubeTypes.FILE_IMAGE:
+                ending = ".jpg";
+            break;
+            case TubeTypes.FILE_AUDIO:
+            ending = ".m4a";
+            break;
+            case TubeTypes.FILE_VIDEO:
+            ending = ".mp4";
+            break;
+        }
+        return path + ending
     }
 
     addTitle(id, title){
