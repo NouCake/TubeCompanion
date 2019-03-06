@@ -1,6 +1,7 @@
 //For Docs
 const TubeData = require('./tubedata');
 const DataHandler = require('./datahandler');
+const t = require('../../lib/videoinfo');
 
 const TubeTypes = require('../tubetypes')
 const ytdl = require('ytdl-core');
@@ -13,6 +14,18 @@ class DataDownloader{
      */
     constructor(datman){
         this.datman = datman;
+    }
+
+    /**
+     * Initializes a download for every incomplete dataset given by DataHandler
+     */
+    downloadIncompleteData(){
+        let data = this.datman.getIncompleteData();
+        if(data){
+            for(let i in this.data){
+                requestDownload(data[i].id);
+            }
+        }
     }
 
     /**
@@ -43,19 +56,33 @@ class DataDownloader{
             return;
         }
 
-        if(!data._hasMeta){
-            downloadMetaInformation(data);
-        }
-        if(!data._hasImage){
-            downloadThumbnail(data);
-        }
-        if(!data._hasAudio){
-            downloadAudio(data);
-        }
-        if(!data._hasVideo){
-            downloadVideo(data);
-        }
         
+
+        
+        
+    }
+
+    getYTDLandDownload(data){
+        ytdl.getInfo(data.id).then(info => {
+            //check if info is valid?
+            //what if bad id is handed
+
+        
+
+            if(!data._hasMeta){
+                downloadMetaInformation(data, info);
+            }
+            if(!data._hasImage){
+                downloadThumbnail(data);
+            }
+            if(!data._hasAudio){
+                downloadAudio(data);
+            }
+            if(!data._hasVideo){
+                downloadVideo(data);
+            }
+            
+        });
     }
 
     /**
@@ -64,9 +91,9 @@ class DataDownloader{
      * Title
      * @param {TubeData} data 
      */
-    downloadMetaInformation(data){
+    downloadMetaInformation(data, ytdl_info){
         //TODO
-        //data.setMeta(title);
+        data.setMeta(ytdl_info.title);
     }
 
 
@@ -74,7 +101,7 @@ class DataDownloader{
      * Uses ytdl to get thumbnail
      * @param {TubeData} data 
      */
-    downloadThumbnail(data){
+    downloadThumbnail(data, ytdl_info){
         //TODO
         //fs.appendFileSync(this.datman.getDataFilePath(data, TubeTypes.FILE_IMAGE)); SYNC OR NOT SYNC!
         //data.setImage(size);
@@ -84,7 +111,7 @@ class DataDownloader{
      * Uses ytdl to get audio file
      * @param {TubeData} data 
      */
-    downloadAudio(data){
+    downloadAudio(data, ytdl_info){
         //TODO
         //fs.appendFileSync(this.datman.getDataFilePath(data, TubeTypes.FILE_AUDIO)); SYNC OR NOT SYNC!
         //data.setAudio(size);
@@ -92,9 +119,9 @@ class DataDownloader{
 
     /**
      * Uses ytdl to get video file
-     * @param {TubeData} data 
+     * @param {TubeData} data
      */
-    downloadVideo(data){
+    downloadVideo(data, ytdl_info){
         //TODO
         //fs.appendFileSync(this.datman.getDataFilePath(data, TubeTypes.FILE_VIDEO)); SYNC OR NOT SYNC!
         //data.setVideo(size);
@@ -103,3 +130,5 @@ class DataDownloader{
     
 
 }
+
+module.exports = DataDownloader;

@@ -24,6 +24,19 @@ class DataHandler{
         }
     }
 
+    /**
+     * @returns {Array<TubeData>} 
+     */
+    getIncompleteData(){
+        let incomplete = [];
+        for(let data in this.data){
+            if(!this.data[data].isComplete){
+                incomplete.push(data);
+            }
+        }
+        return incomplete.length ? incomplete : null;
+    }
+
     addData(id){
         if(this.data[id] != null){
             console.log("Entry with this id already exists");

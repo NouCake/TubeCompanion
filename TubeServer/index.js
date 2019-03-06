@@ -14,3 +14,17 @@ http.listen(12012, function(){
 
 const tube = new TubeCompanion(io);
 tube.start();
+
+
+class Foo{
+    constructor(){
+      this.bar = "value"
+    }
+}
+
+/**
+ * @param {Foo} parameter 
+ */
+function foobar(parameter){
+  parameter.bar.charAt(0);
+}

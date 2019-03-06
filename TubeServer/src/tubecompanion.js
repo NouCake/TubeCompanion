@@ -7,6 +7,7 @@ const TubeServer = require('./server/tubeserver');
 const DataHandler = require('./data/datahandler');
 const AccountHandler = require('./account/accounthandler');
 const TubeTypes = require('./tubetypes');
+const DownloadHandler = require('./data/datadownloader');
 
 class TubeCompanion{
     
@@ -15,6 +16,7 @@ class TubeCompanion{
         this.dataHan = new DataHandler(this);
         this.server = new TubeServer(this, ioserver, this.accHan);
         this.pacHan = this.server.getPacketHandler();
+        this.dwnldHan = new DownloadHandler(this.dataHan);
     }
 
     start(){
