@@ -9,6 +9,7 @@
   "author": "NouCake",
   "license": "ISC",
   "dependencies": {
+    "child-process": "^1.0.2",
     "circular-json": "^0.5.9",
     "express": "^4.16.4",
     "ffmpeg": "0.0.4",

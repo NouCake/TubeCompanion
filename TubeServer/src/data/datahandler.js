@@ -25,6 +25,20 @@ class DataHandler{
     }
 
     /**
+     * Creates Folder for given data in DataPath
+     * @param {TubeData} data 
+     */
+    createTubeDataFolder(data){
+        if(!fs.existsSync(this.dataPath + data.id)){
+            fs.mkdirSync(this.dataPath + data.id);
+        }
+    }
+
+    getTubeDataFolder(data){
+        return this.dataPath + data.id + "/";
+    }
+
+    /**
      * @returns {Array<TubeData>} 
      */
     getIncompleteData(){
@@ -37,12 +51,18 @@ class DataHandler{
         return incomplete.length ? incomplete : null;
     }
 
+    /**
+     * creates new TubeData object and adds to list
+     * @param {String} id 
+     * @returns {TubeData}
+     */
     addData(id){
         if(this.data[id] != null){
             console.log("Entry with this id already exists");
-            return;
+            return this.data[id];
         }
         this.data[id] = new TubeData(id);
+        return this.data[id];
     }
 
     hasData(id){

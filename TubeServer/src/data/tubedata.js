@@ -54,6 +54,7 @@ class TubeData {
     setVideo(size){
         this._hasVideo = true;
         this.videosize = size;
+        this.downloading = false;
         this.updateCompleteStatus();
     }
 
@@ -82,7 +83,7 @@ TubeData.create = function(ref){
     ref._hasVideo = ref.video;
 
     let data = new TubeData(ref.id);
-    for(let attr in data){
+    for(let attr in data.getSaveData()){
         if(ref[attr] == null){
             console.log("Error while creating DataObject:\nreference is missing:" + attr, ref);
             return;

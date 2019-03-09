@@ -6,7 +6,7 @@ const TubeTypes = require('../tubetypes')
 const ytdl = require('ytdl-core');
 const fs = require('fs')
 const request = require('request');
-const ffmpeg = require('ffmpeg')
+const spawn = require('child_process').spawn;
 
 class DataDownloader{
 
@@ -31,7 +31,7 @@ class DataDownloader{
         let data = this.datman.getIncompleteData();
         if(data){
             for(let i in this.data){
-                requestDownload(data[i].id);
+                this.requestDownload(data[i].id);
             }
         }
     }
@@ -68,14 +68,15 @@ class DataDownloader{
     }
 
     getYTDLandDownload(data){
-        ytdl.getInfo(data.id).then(info => {
+        ytdl.getInfo(data.id).then((info => {
             //check if info is valid?
             //what if bad id is handed
-            downloadMetaInformation(data, info);
-            downloadThumbnail(data, info);
-            downloadVideo(data, info);
-            downloadAudio(data, info);
-        });
+            this.datman.createTubeDataFolder(data);
+            this.downloadMetaInformation(data, info);
+            this.downloadThumbnail(data, info);
+            this.downloadVideo(data, info);
+            this.downloadAudio(data, info);
+        }).bind(this));
     }
 
     /**
@@ -136,25 +137,39 @@ class DataDownloader{
      */
     downloadAudio(data, ytdl_info){
         if(data._hasAudio) return;
-        if(!data._hasVideo && !data.downloading){
+        if(!data._hasVideo){
+            //possible race condition
             this.downloadVideo(data, ytdl_info);
             return;
         }
+        console.log("hello", data._hasVideo, data.downloading);
+        this._extractAudioFromVideo(data);
+    }
 
-
-        //TODO
-        //fs.appendFileSync(this.datman.getDataFilePath(data, TubeTypes.FILE_AUDIO)); SYNC OR NOT SYNC!
-        //data.setAudio(size);
+    _extractAudioFromVideo(data){
+        let path = this.datman.getTubeDataFolder(data)+ data.id
+        let ffmpeg = spawn('ffmpeg', ['-i',  path + ".mp4", '-vn', path + ".m4a"]);
+        ffmpeg.on('exit', code => {
+            if(code === 0){
+                let size = fs.statSync(path + ".m4a").size;
+                data.setAudio(size);
+                console.log("Audio done", size);
+            } else {
+                console.log("Error on FFMPEG", code);
+            }
+        });
     }
 
     /**
      * Uses ytdl to get video file
+     * after download finish extracts audio
      * @param {TubeData} data
      * @param {import('ytdl-core').videoInfo} ytdl_info 
      */
     downloadVideo(data, ytdl_info){
+        if(data.downloading) return;
+        data.downloading = true;
         if(data._hasVideo) return;
-        console.log("hello");
         let size;
         let f = this._findBestVideoFormat(ytdl_info.formats);
         //if(false)
@@ -166,7 +181,8 @@ class DataDownloader{
             .on('close', function(){
                 console.log("video downloaded", size);
                 data.setVideo(size);
-            })
+                this._extractAudioFromVideo(data);
+            }.bind(this))
     }
 
     /**
