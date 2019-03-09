@@ -111,7 +111,7 @@ class TubeCompanion{
         packet.currentPacket = 0;
         packet.totalPackets = totalPackets;
 
-        this.dataHan.getDataFile(data, filetype,
+        this.dataHan.getDataFile(data, filetype, bufferSize, 
             function(){
 
             })

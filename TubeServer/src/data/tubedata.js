@@ -17,6 +17,9 @@ class TubeData {
         this.downloading = false;
     }
 
+    /**
+     * renames attributes and cherrypicks relevant data for saving
+     */
     getSaveData(){
         return {
             id:this.id,
@@ -75,13 +78,15 @@ TubeData.create = function(ref){
         return;
     }
 
-    //Renaming attributes;
+    //Renaming attributes
     ref._complete = ref.complete;
     ref._hasMeta = ref.meta;
     ref._hasImage = ref.image;
     ref._hasAudio = ref.audio;
     ref._hasVideo = ref.video;
 
+    //checks if read data has complete attribute set
+    //indicates if working on an old fileset
     let data = new TubeData(ref.id);
     for(let attr in data.getSaveData()){
         if(ref[attr] == null){

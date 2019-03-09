@@ -88,8 +88,7 @@ class DataDownloader{
      */
     downloadMetaInformation(data, ytdl_info){
         if(data._hasMeta) return;
-        
-        data.setMeta(ytdl_info.title);
+        this.datman.addTitle(data, ytdl_info.title);
     }
 
 
@@ -101,13 +100,15 @@ class DataDownloader{
     downloadThumbnail(data){
         if(data._hasImage) return;
         let path = this.datman.getDataFilePath(data, TubeTypes.FILE_IMAGE);
+
+        let context = this; //is this nice style?
         this._findImageURL(data.id, function(url, size){
             if(!url) return;
             request(url)
                 .pipe(fs.createWriteStream(path))
                 .on('close', function(){
-                    console.log("image downloaded");
-                    data.setImage(size);
+                    console.log("image downloaded", size);
+                    context.datman.addImage(data, size);
                 });
         })
     }
@@ -149,15 +150,16 @@ class DataDownloader{
     _extractAudioFromVideo(data){
         let path = this.datman.getTubeDataFolder(data)+ data.id
         let ffmpeg = spawn('ffmpeg', ['-i',  path + ".mp4", '-vn', path + ".m4a"]);
-        ffmpeg.on('exit', code => {
+        ffmpeg.on('exit', (code => {
             if(code === 0){
                 let size = fs.statSync(path + ".m4a").size;
-                data.setAudio(size);
+                this.datman.addAudio(data, size)
                 console.log("Audio done", size);
+                data.setAudio(size);
             } else {
                 console.log("Error on FFMPEG", code);
             }
-        });
+        }).bind(this));
     }
 
     /**
@@ -180,7 +182,7 @@ class DataDownloader{
             .pipe(fs.createWriteStream(this.datman.getDataFilePath(data, TubeTypes.FILE_VIDEO)))
             .on('close', function(){
                 console.log("video downloaded", size);
-                data.setVideo(size);
+                this.datman.addVideo(data, size);
                 this._extractAudioFromVideo(data);
             }.bind(this))
     }

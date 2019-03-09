@@ -9,7 +9,6 @@ class AccountHandler{
     }
 
     /**
-     * 
      * @param {Account} account 
      */
     addAccount(account){

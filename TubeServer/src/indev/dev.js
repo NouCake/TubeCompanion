@@ -7,12 +7,13 @@ const spawn = require('child_process').spawn;
 //Docs
 const TubeCompanion = require('../tubecompanion');
 const TubeData = require('../data/tubedata');
+const TubeTypes = require('../tubetypes')
 
 /**
  * @param {TubeCompanion} main 
  */
 function dev(main){
-    let id = "dOB1tw4r7Cg";
+    let id = "7KF31dRMeos";
     let data = new TubeData(id);
     /*
     main.dataHan.createTubeDataFolder(data);
@@ -22,7 +23,12 @@ function dev(main){
     });
     */
 
-    main.dwnldHan.requestDownload(id);
+    //main.dwnldHan.requestDownload(id);
+
+    main.dataHan.getDataFile(data, TubeTypes.FILE_IMAGE, 1024,
+        function(data){
+
+        })
     
 
 }

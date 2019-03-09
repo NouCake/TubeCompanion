@@ -113,32 +113,88 @@ class DataHandler{
         }
     }
 
-    getDataFile(data, FILE_TYPE, callback){
-        this.loader.readFileAsync(this.getDataFilePath(data, FILE_TYPE), callback);
+    getDataFile(data, FILE_TYPE, chunksize, callback){
+        this.loader.readFileAsync(this.getDataFilePath(data, FILE_TYPE), chunksize, callback);
     }
 
-    addTitle(id, title){
-        if(!this.data[id] == null){
-            console.log("No Entry with this id found");
-            return;
+    /**
+     * @param {TubeData | String} data 
+     * @returns {TubeData}
+     */
+    _isDataAndGet(data){
+        if(!(data instanceof TubeData)){
+            data = this.data[id];
+            if(!data){
+                console.log("No Entry with this id found");
+                return;
+            }
         }
-        this.data[id].setTitle(title);
+        return data;
     }
 
-    addAudio(id, size){
-        if(!this.data[id] == null){
-            console.log("No Entry with this id found");
-            return;
+    /**
+     * @param {TubeData | String} id 
+     * @param {String} title 
+     */
+    addTitle(data, title){
+        data = this._isDataAndGet(data);
+        if(!data) return;
+
+        data.setMeta(title);
+        if(data.isComplete()){
+            this.onDataComplete(data);
         }
-        this.data[id].setAudio(size);
     }
 
-    addImage(id, size){
-        if(!this.hasData(id)){
-            console.log("No Entry with this id found");
-            return;
+    /**
+     * @param {TubeData | String} id 
+     * @param {String} title 
+     */
+    addAudio(data, size){
+        data = this._isDataAndGet(data);
+        if(!data) return;
+        
+        data.setAudio(size);
+        if(data.isComplete()){
+            this.onDataComplete(data);
         }
-        this.data[id].setImage(size);
+    }
+
+    /**
+     * @param {TubeData | String} id 
+     * @param {String} title 
+     */
+    addImage(data, size){
+        data = this._isDataAndGet(data);
+        if(!data) return;
+
+        data.setImage(size);
+        if(data.isComplete()){
+            this.onDataComplete(data);
+        }
+    }
+
+    /**
+     * @param {TubeData | String} id 
+     * @param {String} title 
+     */
+    addVideo(data, size){
+        data = this._isDataAndGet(data);
+        if(!data) return;
+
+        data.setVideo(size);
+        if(data.isComplete()){
+            this.onDataComplete(data);
+        }
+    }
+
+    /**
+     * 
+     * @param {TubeData} data 
+     */
+    onDataComplete(data){
+        console.log("data is complete", data.id);
+        this.saveAllData();
     }
 
     saveAllData(){

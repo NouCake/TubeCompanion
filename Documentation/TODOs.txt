@@ -1,0 +1,3 @@
+use streams for file uploading
+https://medium.com/@dalaidunc/fs-readfile-vs-streams-to-read-text-files-in-node-js-5dd0710c80ea
+=> files greater than 10mb should be read as stream.
