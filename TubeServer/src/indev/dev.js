@@ -13,8 +13,8 @@ const TubeData = require('../data/tubedata');
 function dev(main){
     let id = "dOB1tw4r7Cg";
 
-    
     ytdl.getInfo(id).then(info => {
+        console.log(id);
         main.dwnldHan.downloadVideo(new TubeData(id), info);
         
     });

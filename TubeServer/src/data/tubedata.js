@@ -12,6 +12,9 @@ class TubeData {
         this._hasImage = false;
         this._hasAudio = false;
         this._hasVideo = false;
+
+        //for Downloader
+        this.downloading = false;
     }
 
     getSaveData(){
