@@ -1,5 +1,18 @@
 const TubeTypes = require('../tubetypes');
 
+class RequestPacket{
+        
+    /**
+     * 
+     * @param {Number} reqid 
+     * @param {Number} reqtype 
+     */
+    constructor(reqid, reqtype){
+        this.type = TubeTypes.REQUEST;
+    }
+
+}
+
 class LoginPacket{
     
     /**
@@ -37,6 +50,7 @@ class Packets {
 
         this.sampleLoginPacket = new LoginPacket("DEFAULT", "DEFAULT", TubeTypes.DEFAULT_VALUE);
         this.sampleLoginResponsePacket = new LoginResponsePacket(TubeTypes.DEFAULT_VALUE);
+        this.sampleRequestPacket = new RequestPacket(TubeTypes.DEFAULT_VALUE, TubeTypes.DEFAULT_VALUE);
     }
 
     /**
@@ -49,6 +63,8 @@ class Packets {
                 return this.sampleLoginPacket;
             case TubeTypes.LOGIN_RESPONSE:
                 return this.sampleLoginResponsePacket;
+            case TubeTypes.REQUEST:
+                return this.sampleRequestPacket;
             default:
                 return null;
         }

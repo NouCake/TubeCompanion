@@ -101,20 +101,27 @@ class PacketHandler{
      * @param {SamplePackets.LoginPacket} packet (yet)unknown packet
      */
     handleLogin(socket, packet){
-        if(!this.accHan.findAccountBySocket(socket)){
-            packet = this.parsePacket(packet);
-            if(!packet){
-                sendLoginResponse(socket, TubeTypes.LOGIN_FAILED_BAD_PACKET);
-                return;
-            }
-            if(this.compareWithSamplePacket(packet, TubeTypes.LOGIN)){
-                this.main.onLoginAttempt(socket, packet.apptype, packet.username, packet.password);
-            } else {
-                this.server.sendMessage(socket, this.error);
-            }
-        } else {
-            sendLoginResponse(socket, TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION);
+        //Socket/Account ok?
+        let account = this.accHan.findAccountBySocket(socket);
+        if(account){
+            this.sendLoginResponse(socket, TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION);
+            return;
         }
+        
+        //Packet null/not json
+        packet = this.parsePacket(packet);
+        if(!packet){ //Parsing error
+            this.sendLoginResponse(socket, TubeTypes.LOGIN_FAILED_BAD_PACKET);
+            return;
+        }
+
+        //Packet content ok?
+        if(!this.compareWithSamplePacket(packet, TubeTypes.LOGIN)){
+            this.server.sendMessage(socket, this.error);
+            return;
+        }
+
+        this.main.onLoginAttempt(socket, packet.apptype, packet.username, packet.password);
     }
     
 
@@ -147,6 +154,29 @@ class PacketHandler{
             return;
         }
 
+    }
+
+    handleRequest(socket, packet){
+        let account = this.accHan.findAccountBySocket(socket);
+        if(!account) {
+            console.log("Unautorized");
+            this.server.sendMessage(socket, "Unautorized");
+            return;
+        }
+
+        packet = this.parsePacket(packet);
+        if(!packet){ //Parsing error
+            console.log("Bad Packet");
+            this.server.sendMessage(socket, "Bad Packet");
+            return;
+        }
+
+        if(!this.compareWithSamplePacket(packet, TubeTypes.REQUEST)){
+            this.server.sendMessage(socket, this.error);
+            return;
+        }
+
+        this.main.onRequest(socket, packet);
     }
 
     /**

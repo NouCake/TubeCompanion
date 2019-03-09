@@ -31,9 +31,34 @@ class Account {
          * @type {Socket}
          */
         this.device = null;
+        this.submitQueue = [];
 
         this._error = "";
     }
+
+    /**
+     * @param {TubeData} data 
+     */
+    addToSubmit(data){
+        if(this.isInSubmitQueue(data)){
+            return;
+        }
+        this.submitQueue.push(data);
+    }
+
+    removeFromSubmit(data){
+        this.submitQueue = this.submitQueue.filter(d => d != data);
+    }
+
+    isInSubmitQueue(data){
+        for(let i in this.submitQueue){
+            if(this.submitQueue[i] == data){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     
     /**
      * 
@@ -66,7 +91,6 @@ class Account {
     }
 
     /**
-     * 
      * @param {Socket} socket 
      */
     logoutSocket(socket){

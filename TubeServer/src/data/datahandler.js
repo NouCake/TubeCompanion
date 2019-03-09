@@ -1,27 +1,24 @@
 const fs = require('fs');
 const TubeData = require('./tubedata');
 const TubeTypes = require('../tubetypes')
+const DataLoader = require('./dataloader');
 
 class DataHandler{
 
     constructor(main){
         this.main = main;
     
-        this.data = {};
         this.dataPath = './data/';
         this.indexSavePath = './data/index';
+        this.loader = new DataLoader();
+        this.data = {};
 
         this.createDataFolder();
     }
 
     createDataFolder(){
-        if(!fs.existsSync(this.dataPath)){
-            fs.mkdirSync(this.dataPath);
-        } else if(!fs.existsSync(this.indexSavePath)){
-            fs.appendFileSync(this.indexSavePath, '{}', err => {
-                console.log("Error while creating data folder\n", err);
-            });
-        }
+        this.loader.createFolder(this.dataPath);
+        this.loader.createFile(this.indexSavePath, "{}");
     }
 
     /**
@@ -29,9 +26,7 @@ class DataHandler{
      * @param {TubeData} data 
      */
     createTubeDataFolder(data){
-        if(!fs.existsSync(this.dataPath + data.id)){
-            fs.mkdirSync(this.dataPath + data.id);
-        }
+        this.loader.createFolder(this.dataPath + data.id);
     }
 
     getTubeDataFolder(data){
@@ -99,6 +94,28 @@ class DataHandler{
         }
         return path + ending
     }
+    
+    /**
+     * 
+     * @param {TubeData} data 
+     * @param {Number} FILE_TYPE 
+     */
+    getDataFileSize(data, FILE_TYPE){
+        switch(FILE_TYPE){
+            case TubeTypes.FILE_IMAGE:
+                return data.imagesize;
+
+            case TubeTypes.FILE_AUDIO:
+                return data.audiosize;
+
+            case TubeTypes.FILE_VIDEO:
+                return data.videosize;
+        }
+    }
+
+    getDataFile(data, FILE_TYPE, callback){
+        this.loader.readFileAsync(this.getDataFilePath(data, FILE_TYPE), callback);
+    }
 
     addTitle(id, title){
         if(!this.data[id] == null){
@@ -129,18 +146,13 @@ class DataHandler{
         for(let d in this.data){
             toSave[d] = this.data[d].getSaveData();
         }
-        fs.writeFileSync(this.indexSavePath, JSON.stringify(toSave), (err) => {
-            console.log("An error accoured while saving:\n",err);
-        });
+        this.loader.writeFile(this.indexSavePath, JSON.stringify(toSave));
     }
 
     loadAllData(){
-        let index = fs.readFileSync(this.indexSavePath, 'utf8');
-        try{
-            index = JSON.parse(index);
-        } catch(e){
-            console.log("Error: Index file has been corrupted\n",e);
-        }
+        let index = this.loader.readFile(this.indexSavePath, true);
+        if(!index) return;
+
         for(let i in index){
             let savedat = TubeData.create(index[i]);
             if(savedat){
