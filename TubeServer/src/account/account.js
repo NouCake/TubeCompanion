@@ -144,7 +144,7 @@ class Account {
         }
 
         this.device = socket;
-        this._hasClient = true;
+        this._hasDevice = true;
         return true;
     }
 

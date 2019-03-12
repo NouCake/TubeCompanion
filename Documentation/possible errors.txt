@@ -1,0 +1,5 @@
+EventHandler:
+all eventhandler (getHandler) share the same event-object
+error-messages are passed via the event-object => possible race condition, if multiple users have a error on the same time one user could get a wrong error message
+could be very critical for login.
+(I wanna that this error occurs so I'm not gonna fix this (jk im just lazy))

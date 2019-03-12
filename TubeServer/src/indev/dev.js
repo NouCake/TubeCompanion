@@ -23,12 +23,8 @@ function dev(main){
     });
     */
 
-    //main.dwnldHan.requestDownload(id);
+    //main.dwnldHan.requestDownload(id);   
 
-    main.dataHan.getDataFile(data, TubeTypes.FILE_IMAGE, 1024,
-        function(data){
-
-        })
     
 
 }

@@ -42,20 +42,16 @@ class DataLoader{
     }
 
     readFileAsync(path, chunksize, callback){
+        console.log("was here");
         let buffer;
         fs.createReadStream(path)
             .on('data', data => {
-                if(data.length >= chunksize){
-                    let offset = 0;
-                    while(offset + chunksize < data.length){
-
-                    }
+                let offset = 0;
+                while(offset + chunksize < data.length){
+                    callback(data.slice(offset, offset + chunksize), offset, chunksize);
+                    offset += chunksize;
                 }
-                console.log("I just got data");
-                console.log(data.length);
-                console.log(data.slice(0, 8));
-                console.log(data.slice(0, 4));
-                console.log(data.slice(4, 8));
+                callback(data.slice(offset, data.length), offset, data.length - offset);
             })
     }
 

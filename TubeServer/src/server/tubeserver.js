@@ -3,9 +3,10 @@ const TubeCompanion = require('../tubecompanion');
 const AccountHandler = require('../account/accounthandler');
 const SocketIO = require('socket.io');
 const Socket = require('socket.io/lib/socket');
+const EventHandler = require('./events/eventhandler')
 
 //Needed Imports
-const PacketHandler = require('../packet/packethandler');
+const PacketHandler = require('./packet/packethandler');
 
 class TubeServer{
     
@@ -18,7 +19,7 @@ class TubeServer{
     constructor(main, io, accHan){
         this.main = main;
         this.ioServer = io;
-        this.pacHan = new PacketHandler(main, this, accHan);
+        this.eventHandler = new EventHandler(main, this);
 
         this.onConnection = this.onConnection.bind(this);
         this.onDisconnect = this.onDisconnect.bind(this);
@@ -34,8 +35,11 @@ class TubeServer{
      */
     onConnection(socket){
         console.log("[", socket.id,"] has connected");
-        socket.on('login', this.pacHan.getEventHandler(socket, PacketHandler.Events.LOGIN));
-        socket.on('disconnect', this.onDisconnect(socket));
+        this.eventHandler.registerUnprivilegedEvents(socket);
+    }
+
+    onConnectionAuthentificated(socket){
+        this.eventHandler.registerPrivilegedEvents(socket);
     }
 
     /**

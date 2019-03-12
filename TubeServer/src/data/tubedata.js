@@ -78,13 +78,6 @@ TubeData.create = function(ref){
         return;
     }
 
-    //Renaming attributes
-    ref._complete = ref.complete;
-    ref._hasMeta = ref.meta;
-    ref._hasImage = ref.image;
-    ref._hasAudio = ref.audio;
-    ref._hasVideo = ref.video;
-
     //checks if read data has complete attribute set
     //indicates if working on an old fileset
     let data = new TubeData(ref.id);
@@ -95,7 +88,22 @@ TubeData.create = function(ref){
         }
         data[attr] = ref[attr];
     }
+    TubeData.rename(data);
     return data;
+    
+}
+
+TubeData.rename = function(data){
+    //Renaming attributes
+    data._complete = data.complete;
+    data._hasMeta = data.meta;
+    data._hasImage = data.image;
+    data._hasAudio = data.audio;
+    data._hasVideo = data.video;
+    data.meta = null;
+    data.image = null;
+    data.audio = null;
+    data.video = null;
 }
 
 module.exports = TubeData;

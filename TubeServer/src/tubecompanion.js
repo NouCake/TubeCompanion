@@ -15,13 +15,16 @@ class TubeCompanion{
         this.accHan = new AccountHandler();
         this.dataHan = new DataHandler(this);
         this.server = new TubeServer(this, ioserver, this.accHan);
-        this.pacHan = this.server.getPacketHandler();
         this.dwnldHan = new DownloadHandler(this.dataHan);
     }
 
     start(){
         this.dataHan.loadAllData();
         this.server.init();
+    }
+
+    onLoginFailed(socket, error){
+
     }
 
     /**
@@ -32,8 +35,14 @@ class TubeCompanion{
      * @param {String} password 
      */
     onLoginAttempt(socket, apptype, username, password){
-        let account = this.accHan.findAccountByUsername(username);
         let res = 0;
+
+        let account = this.accHan.findAccountBySocket(socket);
+        if(account){
+            res = TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
+        }
+
+        account = this.accHan.findAccountByUsername(username);
         if(!account){
             res = TubeTypes.LOGIN_FAILED_UNKNOWN_USER;
 
@@ -45,9 +54,18 @@ class TubeCompanion{
 
         } else {
             res = TubeTypes.LOGIN_SUCCESS;
+            this.server.onConnectionAuthentificated(socket);
+
             console.log(`(${apptype}) ${account.username} has logged in`);
         }
-        this.pacHan.sendLoginResponse(socket, res);
+
+        this.sendLoginResponse(socket, res);
+    }
+    sendLoginResponse(socket, res){
+        let packet = {};
+        packet.type = TubeTypes.LOGIN_RESPONSE;
+        packet.res = res;
+        this.server.sendPacket(socket, "data", packet);
     }
 
     /**
@@ -65,13 +83,22 @@ class TubeCompanion{
     }
 
     /**
-     * @param {Account} account 
-     * @param {Number} reqid 
+     * If given socket is authenticated (socket is logged into an account)
+     * returns the connected account
+     * otherwise returns null
+     * @param {Socket} socket 
      */
-    sendPendingQueue(account, reqid){
+    isAuthenticated(socket){
+        return this.accHan.findAccountBySocket(socket);
+    }
+
+    /**
+     * @param {Account} account 
+     */
+    sendPendingQueue(account, request){
         let packet = {};
         packet.type = TubeTypes.PENDING_DOWNLOAD_REQUESTS;
-        packet.reqid = reqid;
+        packet.reqid = request.reqid;
         packet.ids = account.submitQueue;
 
         this.server.sendPacket(account.device, "data", packet);
@@ -111,9 +138,14 @@ class TubeCompanion{
         packet.currentPacket = 0;
         packet.totalPackets = totalPackets;
 
+        let context = this;
         this.dataHan.getDataFile(data, filetype, bufferSize, 
-            function(){
-
+            function(buffer, offset, chunksize){
+                packet.byteoffset = offset; //former: startbyte
+                packet.data = buffer;
+                packet.currentPacket = offset / bufferSize;
+                packet.chunksize = chunksize;
+                context.server.sendPacket(account.device, "data", packet);
             })
         
     }
@@ -121,20 +153,20 @@ class TubeCompanion{
     onRequest(account, packet){
         switch(packet.reqtype) {
             case TubeTypes.REQUEST_PENDING:
-
-            break;
+                this.sendPendingQueue(account, packet);
+                break;
             case TubeTypes.REQUEST_META:
-
-            break;
+                this.sendRequestedMeta(account, packet.id, packet.reqid);
+                break;
             case TubeTypes.REQUEST_COVER:
 
-            break;
+                break;
             case TubeTypes.REQUEST_AUDIO:
 
-            break;
+                break;
             case TubeTypes.REQUEST_VIDEO:
 
-            break;
+                break;
         }
     }
 
