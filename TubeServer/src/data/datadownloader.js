@@ -125,8 +125,9 @@ class DataDownloader{
             if(res.headers['content-type'].match("image") && res.headers['content-length'] < max && res.statusCode != 404){
                 callback(url, res.headers['content-length']);
             } else {
-                this.findImageURL(id, callback, sourceIndex+1);
+                this._findImageURL(id, callback, sourceIndex+1);
                 console.log("failed");
+                console.log(res.headers['content-type'], res.headers['content-length'], res.statusCode)
             }
         }.bind(this));
     }

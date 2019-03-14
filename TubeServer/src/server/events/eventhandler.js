@@ -1,11 +1,14 @@
 const LoginEvent = require('./loginevent');
 const DisconnectEvent = require('./disconnectevent');
 const AdminEvent = require('./adminevent');
+const RequestEvent = require('./requestevent');
+const YoutubeEvent = require('./youtubeevent');
 
 //Doc
 const TubeCompanion = require('../../tubecompanion');
 const TubeServer = require('../tubeserver')
 const Socket = require('socket.io/lib/socket')
+
 
 class EventHandler {
 
@@ -21,6 +24,8 @@ class EventHandler {
         this.loginEvent = LoginEvent(main);
         this.disconnectEvent = DisconnectEvent(main);
         this.adminEvent = AdminEvent(main);
+        this.requestEvent = RequestEvent(main);
+        this.youtubeEvent = YoutubeEvent(main);
     }
 
     /**
@@ -35,6 +40,8 @@ class EventHandler {
 
     registerPrivilegedEvents(socket){
         this._registerEvent(socket, this.adminEvent);
+        this._registerEvent(socket, this.requestEvent);
+        this._registerEvent(socket, this.youtubeEvent);
     }
 
     _registerEvent(socket, event){

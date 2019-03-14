@@ -8,31 +8,20 @@ Packets.LoginPacket = {
     apptype: true
 }
 
+Packets.RequestPacket = {
+    type: TubeTypes.REQUEST,
+    reqid: true,
+    reqtype: true
+}
+
+Packets.YTPacket = {
+    type: TubeTypes.YT,
+    link: true
+}
+
+Packets.LoginResponePacket = {
+    type: TubeTypes.LOGIN_RESPONSE,
+    res: true
+}
+
 module.exports = Packets;
-
-class RequestPacket{
-        
-    /**
-     * 
-     * @param {Number} reqid 
-     * @param {Number} reqtype 
-     */
-    constructor(reqid, reqtype){
-        this.type = TubeTypes.REQUEST;
-        this.reqid = reqid;
-        this.reqtype = reqtype;
-    }
-
-}
-
-class LoginResponsePacket{
-
-    /**
-     * @param {Number} res Response type
-     */
-    constructor(res){
-        this.type = TubeTypes.LOGIN_RESPONSE;
-        this.res = res;
-    }
-
-}

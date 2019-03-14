@@ -2,12 +2,14 @@
 const Socket = require('socket.io/lib/socket');
 const Account = require('./account/account');
 
+
 //Needed Imports
 const TubeTypes = require('./tubetypes');
 const TubeServer = require('./server/tubeserver');
 const DataHandler = require('./data/datahandler');
 const AccountHandler = require('./account/accounthandler');
 const DownloadHandler = require('./data/datadownloader');
+const LoginHandler = require('./loginhandler');
 
 class TubeCompanion{
     
@@ -16,6 +18,7 @@ class TubeCompanion{
         this.dataHan = new DataHandler(this);
         this.server = new TubeServer(this, ioserver, this.accHan);
         this.dwnldHan = new DownloadHandler(this.dataHan);
+        this.loginHandler = new LoginHandler(this);
     }
 
     start(){
@@ -23,49 +26,8 @@ class TubeCompanion{
         this.server.init();
     }
 
-    onLoginFailed(socket, error){
-
-    }
-
-    /**
-     * Try to find an account with matching login-data and registers socket to account
-     * @param {Socket} socket 
-     * @param {Number} apptype 
-     * @param {String} username 
-     * @param {String} password 
-     */
     onLoginAttempt(socket, apptype, username, password){
-        let res = 0;
-
-        let account = this.accHan.findAccountBySocket(socket);
-        if(account){
-            res = TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
-        }
-
-        account = this.accHan.findAccountByUsername(username);
-        if(!account){
-            res = TubeTypes.LOGIN_FAILED_UNKNOWN_USER;
-
-        } else if(!account.matches(username, password)){
-            res = TubeTypes.LOGIN_FAILED_WRONG_PASSWORD;
-
-        } else if(!account.loginSocket(socket, apptype)){
-            res = TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
-
-        } else {
-            res = TubeTypes.LOGIN_SUCCESS;
-            this.server.onConnectionAuthentificated(socket);
-
-            console.log(`(${apptype}) ${account.username} has logged in`);
-        }
-
-        this.sendLoginResponse(socket, res);
-    }
-    sendLoginResponse(socket, res){
-        let packet = {};
-        packet.type = TubeTypes.LOGIN_RESPONSE;
-        packet.res = res;
-        this.server.sendPacket(socket, "data", packet);
+        this.loginHandler.onLogin(socket, apptype, username, password);  
     }
 
     /**
@@ -74,12 +36,7 @@ class TubeCompanion{
      * @param {Account} account 
      */
     onLogout(socket, account){
-        const apptype = account.logoutSocket(socket);
-        if(apptype){
-            console.log(`(${apptype}) ${account.username} has logged out`);
-        } else {
-            console.log("Error, couldn't logout account");
-        }
+        this.loginHandler.onLogout(socket, account);
     }
 
     /**
@@ -87,6 +44,7 @@ class TubeCompanion{
      * returns the connected account
      * otherwise returns null
      * @param {Socket} socket 
+     * @returns {Account}
      */
     isAuthenticated(socket){
         return this.accHan.findAccountBySocket(socket);
@@ -122,7 +80,7 @@ class TubeCompanion{
         this.server.sendPacket(account.device, "data", packet);
     }
 
-    sendFile(account, id, reqid, filetype){
+    sendFile(socket, id, reqid, filetype){
         let data = this.dataHan.getData(id);
         let size = this.dataHan.getDataFileSize(data, filetype);
         let packet = {};
@@ -145,12 +103,18 @@ class TubeCompanion{
                 packet.data = buffer;
                 packet.currentPacket = offset / bufferSize;
                 packet.chunksize = chunksize;
-                context.server.sendPacket(account.device, "data", packet);
+                context.server.sendPacket(socket, "data", packet);
             })
         
     }
 
-    onRequest(account, packet){
+    onRequest(socket, packet){
+        let account = this.isAuthenticated(socket);
+        if(!account) {
+            console.log("not auth");
+            return;
+        }
+        
         switch(packet.reqtype) {
             case TubeTypes.REQUEST_PENDING:
                 this.sendPendingQueue(account, packet);
@@ -159,14 +123,21 @@ class TubeCompanion{
                 this.sendRequestedMeta(account, packet.id, packet.reqid);
                 break;
             case TubeTypes.REQUEST_COVER:
-
-                break;
             case TubeTypes.REQUEST_AUDIO:
-
-                break;
             case TubeTypes.REQUEST_VIDEO:
-
+                this.sendFile(socket, packet.id, packet.reqid, this.getFileTypeByRequestType(packet.reqtype));
                 break;
+        }
+    }
+
+    getFileTypeByRequestType(reqtype){
+        switch(reqtype){
+            case TubeTypes.REQUEST_COVER:
+                return TubeTypes.FILE_IMAGE;
+            case TubeTypes.REQUEST_AUDIO:
+                return TubeTypes.FILE_AUDIO;
+            case TubeTypes.REQUEST_VIDEO:
+                return TubeTypes.FILE_VIDEO;
         }
     }
 

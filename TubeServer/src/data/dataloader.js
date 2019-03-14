@@ -41,18 +41,51 @@ class DataLoader{
         }
     }
 
+    /**
+     * 
+     * @param {String} path 
+     * @param {Number} chunksize 
+     * @param {Function} callback 
+     */
     readFileAsync(path, chunksize, callback){
-        console.log("was here");
         let buffer;
+        let size = fs.statSync(path).size;
+        let totalBytesRead = 0;
         fs.createReadStream(path)
             .on('data', data => {
-                let offset = 0;
-                while(offset + chunksize < data.length){
-                    callback(data.slice(offset, offset + chunksize), offset, chunksize);
-                    offset += chunksize;
+                //old
+                if(false){
+                    let offset = 0;
+                    while(offset + chunksize < data.length){
+                        callback(data.slice(offset, offset + chunksize), offset, chunksize);
+                        offset += chunksize;
+                    }
+                    callback(data.slice(offset, data.length), offset, data.length - offset);
                 }
-                callback(data.slice(offset, data.length), offset, data.length - offset);
+
+                //new
+                if(true){
+                    if(buffer) data = Buffer.concat([buffer, data]);
+                    let offset = 0;
+                    while(offset + chunksize < data.length){
+                        callback(data.slice(offset, offset + chunksize), totalBytesRead + offset, chunksize);
+                        offset += chunksize;
+                    }
+                    totalBytesRead += offset;
+                    buffer = data.slice(offset, data.length);
+                }
             })
+            .on('close', () => {
+                if(totalBytesRead < size){
+                    //assert buffer.length <= chunksize
+                    if(buffer.length > chunksize) {
+                        console.log("fatal error while reading");
+                        return;
+                    }
+                    callback(buffer, totalBytesRead, size - totalBytesRead);
+                }
+            })
+
     }
 
 }

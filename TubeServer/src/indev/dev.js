@@ -25,6 +25,13 @@ function dev(main){
 
     //main.dwnldHan.requestDownload(id);   
 
+    let path = main.dataHan.getDataFilePath(data, TubeTypes.FILE_IMAGE)
+    if(false)
+    main.dataHan.loader.readFileAsync(path, 1024, 
+        function(buffer, offset, length){
+            console.log(offset, length);
+        });
+
     
 
 }

@@ -27,6 +27,7 @@ FILE_TYPES
 ---------------
 FILE_IMAGE					300
 FILE_AUDIO					301
+FILE_Video					302
 
 
 LAYOUTS:

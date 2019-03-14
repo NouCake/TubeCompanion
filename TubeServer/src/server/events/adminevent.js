@@ -13,7 +13,11 @@ function AdminEvent(main){
     event.checkPacket = () => true;
     event.onEvent = function(socket, msg){
         try{
-            eval(msg);
+            let val = eval(msg);
+            if(event.return){
+                socket.emit("message", val);
+                event.return = false;
+            }
         } catch(e){
             console.log(e);
         }
