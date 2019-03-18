@@ -71,7 +71,7 @@ class TubeServer{
      * @param {Any} packet packet to send
      */
     sendPacket(socket, event, packet){
-        if(socket) this.packetSender.sendPacket(socket, "data", event);
+        if(socket) this.packetSender.sendPacket(socket, packet, event);
         else console.log("Tried to send Packet with invalid socket");
     }
 

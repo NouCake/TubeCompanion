@@ -15,6 +15,10 @@ class AccountHandler{
         this._accounts.push(account);
     }
 
+    /**
+     * 
+     * @returns {Account} 
+     */
     findAccountBySocket(socket){
         let account = this._accounts.filter(acc => acc.hasSocket(socket));
         switch(account.length){

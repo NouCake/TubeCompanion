@@ -2,7 +2,8 @@ audio converting error:
 when file already exists
 
 
-
+packet receiving:
+when receiving packet may numbers are received as string
 
 
 

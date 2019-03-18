@@ -52,7 +52,7 @@ class LoginHandler {
         let packet = {};
         packet.type = TubeTypes.LOGIN_RESPONSE;
         packet.res = res;
-        this.main.server.sendPacket(socket, "data", packet);
+        this.main.server.sendPacket(socket, "login", packet);
     }
 
 }

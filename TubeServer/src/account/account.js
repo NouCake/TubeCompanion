@@ -85,7 +85,7 @@ class Account {
             case TubeTypes.LOGIN_CLIENT:
                 return this._addClient(socket);
             default:
-                console.log("unknown apptype");
+                console.log("unknown apptype", apptype);
                 return false;
         }
     }

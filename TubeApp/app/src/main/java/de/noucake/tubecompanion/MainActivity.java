@@ -6,19 +6,17 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TubeCompanion main;
+
     private EditText inputUsername;
     private EditText inputPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
 
-        inputUsername = findViewById(R.id.login_input_username);
-        inputPassword = findViewById(R.id.login_input_password);
-
-        inputUsername.clearFocus();
-        inputUsername.getText().clear();
+        main = TubeCompanion.getInstance(this);
 
     }
 }

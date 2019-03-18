@@ -1,0 +1,5 @@
+Design Conecpt:
+
+TubeCompanion (Mainclass).
+Every piece of code in TubeCompanion should run on the main thread.
+This is neccesary since android is a pain in the ass with calls from different threads.
