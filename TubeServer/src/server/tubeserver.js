@@ -3,9 +3,10 @@ const TubeCompanion = require('../tubecompanion');
 const AccountHandler = require('../account/accounthandler');
 const SocketIO = require('socket.io');
 const Socket = require('socket.io/lib/socket');
-const EventHandler = require('./events/eventhandler')
 
 //Needed Imports
+const EventHandler = require('./events/eventhandler')
+const PacketSender = require('./packetsender')
 
 class TubeServer{
     
@@ -19,6 +20,7 @@ class TubeServer{
         this.main = main;
         this.ioServer = io;
         this.eventHandler = new EventHandler(main, this);
+        this.packetSender = new PacketSender(this);
 
         this.onConnection = this.onConnection.bind(this);
         this.onDisconnect = this.onDisconnect.bind(this);
@@ -69,7 +71,7 @@ class TubeServer{
      * @param {Any} packet packet to send
      */
     sendPacket(socket, event, packet){
-        if(socket) socket.emit('data', packet);
+        if(socket) this.packetSender.sendPacket(socket, "data", event);
         else console.log("Tried to send Packet with invalid socket");
     }
 

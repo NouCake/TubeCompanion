@@ -7,3 +7,5 @@ but server should be possible to send files to multiple users parallel.
 
 so maybe there should always be a thread listening to new incoming calls.
 does socket.io already do this? idk
+
+does SetInterval run in a new thread?
