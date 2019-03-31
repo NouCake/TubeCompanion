@@ -13,7 +13,7 @@ import de.noucake.tubecompanion.Server.Packets.TubePacketGenerator;
 import de.noucake.tubecompanion.TubeCompanion;
 import de.noucake.tubecompanion.TubeHandler;
 
-public class TubeServer {
+public class TubeServerHandler {
 
     private final String host = "http://192.168.178.28:12012";
 
@@ -23,7 +23,7 @@ public class TubeServer {
     private ConnectListener connectListener;
     private LoginListener loginListener;
 
-    public TubeServer(TubeCompanion main){
+    public TubeServerHandler(TubeCompanion main){
         this.main = main;
         connectListener = new ConnectListener(this);
         loginListener = new LoginListener(this);

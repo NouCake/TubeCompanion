@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Login.LoginInputActivity;
-import de.noucake.tubecompanion.Server.TubeServer;
+import de.noucake.tubecompanion.Server.TubeServerHandler;
 
 public class TubeCompanion {
 
@@ -19,13 +20,13 @@ public class TubeCompanion {
         return singleton;
     }
 
-    private TubeServer server;
+    private TubeServerHandler server;
     private MainActivity mainActivity;
     private LoginInputActivity loginActivity;
     private TubeHandler handler;
 
     private TubeCompanion(){
-        server = new TubeServer(this);
+        server = new TubeServerHandler(this);
         handler = new TubeHandler(this);
 
         server.connect();
@@ -86,7 +87,7 @@ public class TubeCompanion {
         return handler;
     }
 
-    public TubeServer getServer() {
+    public TubeServerHandler getServer() {
         return server;
     }
 }

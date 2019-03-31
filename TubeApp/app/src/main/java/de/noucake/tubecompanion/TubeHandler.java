@@ -10,7 +10,7 @@ public class TubeHandler extends Handler {
 
     private TubeCompanion main;
 
-    public TubeHandler(TubeCompanion main){
+    TubeHandler(TubeCompanion main){
         this.main = main;
     }
 

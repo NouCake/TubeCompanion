@@ -2,13 +2,14 @@ package de.noucake.tubecompanion.Login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import de.noucake.tubecompanion.DataLoader;
+import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.R;
 import de.noucake.tubecompanion.TubeCompanion;
 import de.noucake.tubecompanion.TubeHandler;
@@ -111,4 +112,9 @@ public class LoginInputActivity extends AppCompatActivity {
         return data;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("TubeCompanion-D", "Login stopped");
+    }
 }

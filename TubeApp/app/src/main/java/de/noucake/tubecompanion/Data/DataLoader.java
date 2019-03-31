@@ -1,4 +1,4 @@
-package de.noucake.tubecompanion;
+package de.noucake.tubecompanion.Data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
