@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="loginBackground">#F5F6FF</color>
+    <color name="item_incomplete">#F00000</color>
 </resources>

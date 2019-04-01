@@ -1,9 +1,13 @@
 package de.noucake.tubecompanion;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+
+import de.noucake.tubecompanion.Dashboard.DashboardActivity;
+import de.noucake.tubecompanion.Login.LoginInputActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,11 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         main = TubeCompanion.getInstance(this);
 
-        inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-
-        LinearLayout content = findViewById(R.id.dashboard_content);
-        content.addView(inflater.inflate(R.layout.dasboard_item, null, false));
-        content.addView(inflater.inflate(R.layout.dasboard_item, null, false));
-        content.addView(inflater.inflate(R.layout.dasboard_item, null, false));
+        Intent intent = new Intent(this, DashboardActivity.class);
+        startActivity(intent);
     }
 }

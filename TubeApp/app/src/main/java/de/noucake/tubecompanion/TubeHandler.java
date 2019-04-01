@@ -3,6 +3,11 @@ package de.noucake.tubecompanion;
 import android.os.Handler;
 import android.os.Message;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import de.noucake.tubecompanion.Data.TubeData;
+
 public class TubeHandler extends Handler {
 
     public static final int ON_CONNECTION = 0;
@@ -10,8 +15,9 @@ public class TubeHandler extends Handler {
 
     private TubeCompanion main;
 
-    TubeHandler(TubeCompanion main){
+    public TubeHandler(TubeCompanion main){
         this.main = main;
+
     }
 
     @Override

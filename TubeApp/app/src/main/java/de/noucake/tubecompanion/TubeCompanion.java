@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import de.noucake.tubecompanion.Dashboard.DashboardActivity;
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Login.LoginInputActivity;
 import de.noucake.tubecompanion.Server.TubeServerHandler;
@@ -21,8 +22,11 @@ public class TubeCompanion {
     }
 
     private TubeServerHandler server;
+
     private MainActivity mainActivity;
     private LoginInputActivity loginActivity;
+    private DashboardActivity dashboardActivity;
+
     private TubeHandler handler;
 
     private TubeCompanion(){
@@ -37,6 +41,8 @@ public class TubeCompanion {
             mainActivity = (MainActivity)activity;
         } else if(activity instanceof LoginInputActivity){
             loginActivity = (LoginInputActivity)activity;
+        } else if(activity instanceof DashboardActivity){
+            dashboardActivity = (DashboardActivity)activity;
         }
     }
 
