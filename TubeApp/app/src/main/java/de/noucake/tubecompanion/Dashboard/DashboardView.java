@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.LinkedList;
@@ -44,9 +45,11 @@ public class DashboardView {
 
     void addTubeDataFromHandler(TubeData data){
         ViewGroup v = (ViewGroup)inflater.inflate(R.layout.dasboard_item, null, false);
-        v.setOnTouchListener(dashboardInput);
         contentParent.addView(v);
         items.add(new DashboardItem(data, v));
+
+        dashboard.registerForContextMenu(v);
+
     }
 
     void removeTubeDataFromHandler(TubeData data){
@@ -67,6 +70,15 @@ public class DashboardView {
             }
         }
         Log.d("TubeCompanion-D", "Could not find Item in View");
+        return null;
+    }
+
+    public DashboardItem getItemByView(View v){
+        for(DashboardItem i : items){
+            if(i.getItemRoot() == v){
+                return i;
+            }
+        }
         return null;
     }
 

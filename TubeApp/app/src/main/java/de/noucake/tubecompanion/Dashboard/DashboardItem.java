@@ -56,6 +56,14 @@ public class DashboardItem {
         }
     }
 
+    public void setSelected(){
+        itemRoot.setBackgroundColor(colorIncomplete);
+    }
+
+    public void setUnselected(){
+        itemRoot.setBackgroundColor(colorComplete);
+    }
+
     private void registerView(View v){
         switch(v.getId()){
             case R.id.dashboard_item_title:

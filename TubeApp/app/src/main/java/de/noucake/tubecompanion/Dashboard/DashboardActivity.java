@@ -2,9 +2,11 @@ package de.noucake.tubecompanion.Dashboard;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.Random;
@@ -81,6 +83,14 @@ public class DashboardActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.dashboard_menu, menu);
         return true;
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.dashboard_menu, menu);
+    }
+
+
 
     public DashboardView getView() {
         return view;
