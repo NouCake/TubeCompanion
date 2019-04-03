@@ -12,6 +12,7 @@ public class DashboardHandler extends Handler {
 
     private static final int ADD_DATA = 100;
     private static final int REMOVE_DATA = 110;
+    private static final int REMOVE_ITEM = 111;
     private static final int REMOVE_ALL = 120;
 
 
@@ -38,6 +39,13 @@ public class DashboardHandler extends Handler {
         sendEmptyMessage(0);
     }
 
+    void enqueueRemove(DashboardItem item){
+        synchronized (queue){
+            queue.add(new HandlerCommand(REMOVE_ITEM, item));
+        }
+        sendEmptyMessage(0);
+    }
+
     void enqueueRemoveAll(){
         synchronized (queue){
             queue.add(new HandlerCommand(REMOVE_ALL));
@@ -47,15 +55,19 @@ public class DashboardHandler extends Handler {
     }
 
     private void doAdd(HandlerCommand command){
-        dashboard.getView().addTubeDataFromHandler(command.data);
+        dashboard.getView().addTubeDataAsHandler(command.data);
     }
 
-    private void doRemove(HandlerCommand command){
-        dashboard.getView().removeTubeDataFromHandler(command.data);
+    private void doRemoveData(HandlerCommand command){
+        dashboard.getView().removeTubeDataAsHandler(command.data);
+    }
+
+    private void doRemoveItem(HandlerCommand command){
+        dashboard.getView().removeItemAsHandler(command.item);
     }
 
     private void doRemoveAll(HandlerCommand command){
-        dashboard.getView().removeAllFromHandler();
+        dashboard.getView().removeAllAsHandler();
     }
 
     private void doCommand(HandlerCommand command){
@@ -64,7 +76,10 @@ public class DashboardHandler extends Handler {
                 doAdd(command);
                 break;
             case REMOVE_DATA:
-                doRemove(command);
+                doRemoveData(command);
+                break;
+            case REMOVE_ITEM:
+                doRemoveItem(command);
                 break;
             case REMOVE_ALL:
                 doRemoveAll(command);
@@ -87,14 +102,22 @@ public class DashboardHandler extends Handler {
     private class HandlerCommand{
         private int type;
         private TubeData data;
+        private DashboardItem item;
 
         public HandlerCommand(int type, TubeData data){
             this(type);
             this.data = data;
         }
 
+        public HandlerCommand(int type, DashboardItem item){
+            this(type);
+            this.item = item;
+        }
+
         public HandlerCommand(int type){
             this.type = type;
         }
+
+
     }
 }

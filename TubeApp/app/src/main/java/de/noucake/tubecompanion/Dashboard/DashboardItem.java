@@ -16,7 +16,7 @@ import de.noucake.tubecompanion.R;
 
 public class DashboardItem {
 
-    private static final int colorIncomplete = Color.LTGRAY;
+    private static final int colorIncomplete = 0xFFF0F0F0;
     private static final int colorComplete = 0xFFFAFAFA;
 
     private ViewGroup itemRoot;
@@ -36,7 +36,7 @@ public class DashboardItem {
         updateViewData();
     }
 
-    private void updateViewData(){
+    public void updateViewData(){
         id.setText(data.getId());
         title.setText(data.getTitle());
         author.setText(data.getAuthor());

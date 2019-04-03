@@ -43,24 +43,53 @@ public class DashboardView {
         defaultPicture = BitmapFactory.decodeResource(dashboard.getResources(), R.drawable.loading);
     }
 
-    void addTubeDataFromHandler(TubeData data){
+    private void addDahboardItem(TubeData data){
         ViewGroup v = (ViewGroup)inflater.inflate(R.layout.dasboard_item, null, false);
+        dashboard.registerForContextMenu(v);
+        v.setOnCreateContextMenuListener(dashboardInput);
+
         contentParent.addView(v);
         items.add(new DashboardItem(data, v));
-
-        dashboard.registerForContextMenu(v);
-
     }
 
-    void removeTubeDataFromHandler(TubeData data){
+    /**
+     * Should only be called by (Dashboard)Handler
+     * @param data
+     */
+    void addTubeDataAsHandler(TubeData data){
+        addDahboardItem(data);
+    }
+
+    /**
+     * Should only be called by (Dashboard)Handler
+     * @param data
+     */
+    void removeTubeDataAsHandler(TubeData data){
         DashboardItem item = getItemByTubeData(data);
         contentParent.removeView(item.getItemRoot());
+        items.remove(item);
     }
 
-    void removeAllFromHandler(){
+    /**
+     * Should only be called by (Dashboard)Handler
+     * @param item
+     */
+    void removeItemAsHandler(DashboardItem item){
+        contentParent.removeView(item.getItemRoot());
+        items.remove(item);
+    }
+
+    /**
+     * Should only be called by (Dashboard)Handler
+     */
+    void removeAllAsHandler(){
         for(DashboardItem item : items){
             contentParent.removeView(item.getItemRoot());
         }
+    }
+
+    void removeItem(DashboardItem item){
+        handler.enqueueRemove(item);
     }
 
     private DashboardItem getItemByTubeData(TubeData data){
