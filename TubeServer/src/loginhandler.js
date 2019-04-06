@@ -27,9 +27,9 @@ class LoginHandler {
         } else if(!account.matches(username, password)){
             res = TubeTypes.LOGIN_FAILED_WRONG_PASSWORD;
 
-        } else if(!account.loginSocket(socket, apptype)){
-            res = TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
-
+        } else if((res = account.loginSocket(socket, apptype)) != true){  //Terrible line of code, suffer future me!
+            //res = TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
+            //Not neccessary since res get set in if
         } else {
             res = TubeTypes.LOGIN_SUCCESS;
             this.main.server.onConnectionAuthentificated(socket);

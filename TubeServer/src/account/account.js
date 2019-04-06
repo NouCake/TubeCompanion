@@ -81,12 +81,12 @@ class Account {
     loginSocket(socket, apptype){
         switch(apptype){
             case TubeTypes.LOGIN_DEVICE:
-                return this._addDevice(socket);
+                return this._addDevice(socket) ? true : TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
             case TubeTypes.LOGIN_CLIENT:
-                return this._addClient(socket);
+                return this._addClient(socket) ? true : TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION;
             default:
                 console.log("unknown apptype", apptype);
-                return false;
+                return TubeTypes.LOGIN_FAILED;
         }
     }
 

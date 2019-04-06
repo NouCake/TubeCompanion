@@ -6,7 +6,9 @@ packet receiving:
 when receiving packet may numbers are received as string
 
 
-
+App
+###
+Packets send queue (when packet send command are incomming while client is not logged in)
 
 
 

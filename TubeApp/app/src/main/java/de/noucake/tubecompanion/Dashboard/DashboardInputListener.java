@@ -29,6 +29,7 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
         renameDialogInputTitle = v.findViewById(R.id.dashboard_rename_title);
         renameDialogInputAuthor = v.findViewById(R.id.dashboard_rename_author);
         v.findViewById(R.id.dashboard_rename_ok).setOnClickListener(this);
+        v.findViewById(R.id.dashboard_rename_cancel).setOnClickListener(this);
         renameDialogBuilder.setView(v);
         renameDialog = renameDialogBuilder.create();
     }
@@ -55,6 +56,10 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
                 //TODO
                 //Ask main if deletion is ok / deligate this event to main
                 dashboard.getView().removeItem(lastSelectedItem); //ugly
+                break;
+            case R.id.dashboard_item_context_complete:
+                if(lastSelectedItem.getData().isComplete()) lastSelectedItem.setIncomplete();
+                else lastSelectedItem.setComplete();
                 break;
         }
         return false;

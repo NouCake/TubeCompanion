@@ -56,11 +56,13 @@ public class DashboardItem {
         }
     }
 
-    public void setSelected(){
+    public void setIncomplete(){
+        data.setComplete(false);
         itemRoot.setBackgroundColor(colorIncomplete);
     }
 
-    public void setUnselected(){
+    public void setComplete(){
+        data.setComplete(true);
         itemRoot.setBackgroundColor(colorComplete);
     }
 

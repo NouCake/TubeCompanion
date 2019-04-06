@@ -10,4 +10,7 @@
     <item
         android:id="@+id/dashboard_showlogin"
         android:title="Show Login" />
+    <item
+        android:id="@+id/dashboard_host"
+        android:title="Set Host Adress" />
 </menu>

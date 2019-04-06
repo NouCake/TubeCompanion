@@ -56,22 +56,45 @@ public class TubeCompanion {
         startLogin();
     }
 
-    public void onLoginSucceed(){
-        if(loginActivity != null){
-            loginActivity.finish();
-            loginActivity = null;
-        }
-    }
-
     private void startLogin(){
         assert mainActivity != null;
 
         if(!DataLoader.hasLoginData(mainActivity)){
             String[] data = DataLoader.loadLoginData(mainActivity);
-
+            if(data == null ||data.length < 2){
+                //Inkonsistent state
+                startLoginActivity();
+                return;
+            }
             server.login(data[0], data[1]);
         } else {
             startLoginActivity();
+        }
+    }
+
+    public void onLoginSucceed(){
+        if(loginActivity != null){
+            if(loginActivity.isRememberChecked()){
+                String[] data = loginActivity.getLoginData();
+                DataLoader.saveLoginData(mainActivity, data[0], data[1], true);
+            }
+        }
+
+        stopLogin();
+    }
+
+    public void requestLoginData(){
+        if(loginActivity == null){
+            startLoginActivity();
+        } else {
+            loginActivity.showLogin();
+        }
+    }
+
+    public void stopLogin(){
+        if(loginActivity != null){
+            loginActivity.finish();
+            loginActivity = null;
         }
     }
 
@@ -89,11 +112,23 @@ public class TubeCompanion {
         server.login(data[0], data[1]);
     }
 
+    public void displayMessage(String msg){
+        Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT);
+    }
+
     public TubeHandler getHandler(){
         return handler;
     }
 
     public TubeServerHandler getServer() {
         return server;
+    }
+
+    public DashboardActivity getDashboardActivity() {
+        return dashboardActivity;
+    }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
     }
 }

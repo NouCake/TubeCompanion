@@ -19,6 +19,10 @@ public class TubeTypes {
     public static final int LOGIN_CLIENT =              101;
     public static final int LOGIN_SUCCESS =             102;
     public static final int LOGIN_FAILED =              103;
+    public static final int LOGIN_FAILED_ACTIV_CONNECTION=104;
+    public static final int LOGIN_FAILED_BAD_PACKET =   105;
+    public static final int LOGIN_FAILED_UNKNOWN_USER = 106;
+    public static final int LOGIN_FAILED_WRONG_PASSWORD=107;
 
     //FILE TYPES
     public static final int FILE_IMAGE =                300;

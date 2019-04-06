@@ -2,6 +2,7 @@ package de.noucake.tubecompanion.Server;
 
 import android.util.Log;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.github.nkzawa.socketio.client.IO;
 
@@ -15,16 +16,18 @@ import de.noucake.tubecompanion.TubeHandler;
 
 public class TubeServerHandler {
 
-    private final String host = "http://192.168.178.28:12012";
+    private final static String host = "http://192.168.178.30:12012";
 
     private TubeCompanion main;
 
     private Socket socket;
     private ConnectListener connectListener;
     private LoginListener loginListener;
+    private TubeLoginHandler loginHandler;
 
     public TubeServerHandler(TubeCompanion main){
         this.main = main;
+        loginHandler = new TubeLoginHandler(main, this);
         connectListener = new ConnectListener(this);
         loginListener = new LoginListener(this);
     }
@@ -44,39 +47,41 @@ public class TubeServerHandler {
         socket.off("connect");
 
         socket.on("login", loginListener);
-
+        socket.on("reconnect", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                main.getDashboardActivity().getView().removeAll();
+                socket.emit("message", "Hello");
+            }
+        });
         main.getHandler().sendEmptyMessage(TubeHandler.ON_CONNECTION);
     }
 
     public void onConnectionFailed(int code){
         Log.d("TubeCompanion-D", "Coonection failed " + code);
     }
+    public void login(String username, String password){
+        loginHandler.login(username, password);
+    }
+
+    public void onLoginResponse(int responseType){
+        loginHandler.onLoginResponse(responseType);
+    }
+
+    /**
+     *  Should only be called to send unprivileged packets/requests
+     * @param tag
+     * @param packet Has to be a JSON parseable String.
+     */
+    public void sendPacketDirect(String tag, String packet){
+        assert socket.connected();
+
+        socket.emit(tag, packet);
+    }
 
     public boolean isConnected(){
         return socket.connected();
     }
 
-    public void login(String username, String password){
-        sendPacket("login", TubePacketGenerator.generateLoginPacket(username, password));
-    }
-
-    public void onLoginResponse(int responseType){
-        Log.d("TubeCompanion-D", ""+responseType);
-
-        switch (responseType){
-            case TubeTypes.LOGIN_SUCCESS:
-                main.onLoginSucceed();
-                break;
-        }
-
-    }
-
-    /**
-     * @param tag
-     * @param packet Has to be a JSON parseable String.
-     */
-    private void sendPacket(String tag, String packet){
-        socket.emit(tag, packet);
-    }
 
 }

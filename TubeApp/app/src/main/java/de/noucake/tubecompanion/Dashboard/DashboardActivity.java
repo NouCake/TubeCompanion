@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 
 import java.util.Random;
 
+import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.R;
 import de.noucake.tubecompanion.TubeCompanion;
@@ -82,8 +83,29 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.dashboard_removeall:
                 view.removeAll();
                 break;
+            case R.id.dashboard_host:
+                //TODO: CHANGE
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Host Adress");
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT );
+                builder.setView(input);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DataLoader.saveHostAdress(main.getMainActivity(), input.getText().toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+                break;
             case R.id.dashboard_showlogin:
-
+                //TODO: IMPLEMENT
                 break;
         }
 

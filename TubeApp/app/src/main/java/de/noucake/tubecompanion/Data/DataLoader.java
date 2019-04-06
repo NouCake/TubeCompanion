@@ -50,6 +50,19 @@ public class DataLoader {
         return SP.getBoolean("LOGIN_REMEMBER", false);
     }
 
+    public static String loadHostAdress(Context context){
+        getSP(context);
+        return SP.getString("HOST", null);
+    }
+
+    public static void saveHostAdress(Context context, String host){
+        getSP(context);
+
+        SharedPreferences.Editor editor = SP.edit();
+        editor.putString("HOST", host);
+        editor.apply();
+    }
+
     private static void getSP(Context context){
         if(SP == null){
             SP = context.getSharedPreferences(PREF, Context.MODE_PRIVATE);

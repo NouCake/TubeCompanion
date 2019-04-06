@@ -78,19 +78,20 @@ public class LoginInputActivity extends AppCompatActivity {
         if(remember.isChecked()){
             DataLoader.saveLoginData(this, username, password, true);
         }
-        inputUsername.setEnabled(false);
-        inputPassword.setEnabled(false);
-        remember.setEnabled(false);
-        btnLogin.setEnabled(false);
+        setFormEnabled(false);
 
         main.getHandler().sendEmptyMessage(TubeHandler.LOGIN_INPUT_READY);
     }
 
-    private void reenableForm(){
-        inputUsername.setEnabled(true);
-        inputPassword.setEnabled(true);
-        remember.setEnabled(true);
-        btnLogin.setEnabled(true);
+    private void setFormEnabled(boolean enabled){
+        inputUsername.setEnabled(enabled);
+        inputPassword.setEnabled(enabled);
+        remember.setEnabled(enabled);
+        btnLogin.setEnabled(enabled);
+    }
+
+    public void showLogin(){
+        setFormEnabled(true);
     }
 
     @Override
@@ -115,6 +116,6 @@ public class LoginInputActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("TubeCompanion-D", "Login stopped");
+        Log.d("TubeCompanion-D", "LoginActivity stopped");
     }
 }
