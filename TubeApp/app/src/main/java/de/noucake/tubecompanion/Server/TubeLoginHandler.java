@@ -66,10 +66,12 @@ public class TubeLoginHandler {
                 lastLoginSucceed = false;
                 main.getHandler().displayMessage("Your are already logged in");
                 main.stopLogin();
+                break;
             case TubeTypes.LOGIN_FAILED_BAD_PACKET:
                 lastLoginSucceed = false;
                 main.getHandler().displayMessage("Received Bad Packet, Try again later.");
                 main.stopLogin();
+                break;
             case TubeTypes.LOGIN_FAILED_UNKNOWN_USER:
                 lastLoginSucceed = false;
                 main.getHandler().displayMessage("Unknown Username");

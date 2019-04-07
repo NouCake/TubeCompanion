@@ -8,6 +8,7 @@ import com.github.nkzawa.socketio.client.IO;
 
 import java.net.URISyntaxException;
 
+import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Server.EventListener.ConnectListener;
 import de.noucake.tubecompanion.Server.EventListener.LoginListener;
 import de.noucake.tubecompanion.Server.Packets.TubePacketGenerator;
@@ -16,7 +17,7 @@ import de.noucake.tubecompanion.TubeHandler;
 
 public class TubeServerHandler {
 
-    private final static String host = "http://192.168.178.30:12012";
+    private static String host = "http://192.168.178.30:12012";
 
     private TubeCompanion main;
 
@@ -30,6 +31,7 @@ public class TubeServerHandler {
         loginHandler = new TubeLoginHandler(main, this);
         connectListener = new ConnectListener(this);
         loginListener = new LoginListener(this);
+        host = DataLoader.loadHostAdress(main.getMainActivity());
     }
 
     public void connect(){

@@ -106,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
                 break;
             case R.id.dashboard_showlogin:
                 //TODO: IMPLEMENT
+                main.showLogin();
                 break;
         }
 

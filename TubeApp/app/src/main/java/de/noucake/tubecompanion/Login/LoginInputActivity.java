@@ -36,6 +36,8 @@ public class LoginInputActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Log.d("TubeCompanion-D", "LoginActivity started");
+
         main = TubeCompanion.getInstance(this);
         handler = new LoginInputHandler(this);
         username = "";
@@ -87,7 +89,7 @@ public class LoginInputActivity extends AppCompatActivity {
         inputUsername.setEnabled(enabled);
         inputPassword.setEnabled(enabled);
         remember.setEnabled(enabled);
-        btnLogin.setEnabled(enabled);
+        //btnLogin.setEnabled(enabled);
     }
 
     public void showLogin(){
@@ -114,8 +116,8 @@ public class LoginInputActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         Log.d("TubeCompanion-D", "LoginActivity stopped");
     }
 }

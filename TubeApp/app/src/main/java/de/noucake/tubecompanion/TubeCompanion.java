@@ -18,6 +18,7 @@ public class TubeCompanion {
             singleton = new TubeCompanion();
         }
         singleton.registerActivity(activity);
+        singleton.init();
         return singleton;
     }
 
@@ -30,6 +31,9 @@ public class TubeCompanion {
     private TubeHandler handler;
 
     private TubeCompanion(){
+    }
+
+    public void init(){
         server = new TubeServerHandler(this);
         handler = new TubeHandler(this);
 
@@ -83,12 +87,16 @@ public class TubeCompanion {
         stopLogin();
     }
 
-    public void requestLoginData(){
+    public void showLogin(){
         if(loginActivity == null){
             startLoginActivity();
         } else {
             loginActivity.showLogin();
         }
+    }
+
+    public void requestLoginData(){
+        showLogin();
     }
 
     public void stopLogin(){
@@ -100,8 +108,9 @@ public class TubeCompanion {
 
     private void startLoginActivity(){
         assert mainActivity != null;
-
+        assert loginActivity == null;
         Intent intent = new Intent(mainActivity, LoginInputActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mainActivity.startActivity(intent);
     }
 
@@ -113,7 +122,7 @@ public class TubeCompanion {
     }
 
     public void displayMessage(String msg){
-        Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT);
+        Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     public TubeHandler getHandler(){

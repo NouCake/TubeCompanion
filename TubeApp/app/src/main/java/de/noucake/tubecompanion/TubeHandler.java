@@ -14,6 +14,7 @@ public class TubeHandler extends Handler {
     public static final int ON_CONNECTION = 0;
     public static final int LOGIN_INPUT_READY = 1;
     public static final int SHOW_MESSAGE = 2;
+    public static final int SHOW_LOGIN = 3;
 
     private TubeCompanion main;
     private String msg;
@@ -34,6 +35,8 @@ public class TubeHandler extends Handler {
             case SHOW_MESSAGE:
                 main.displayMessage(this.msg);
                 break;
+            case SHOW_LOGIN:
+                main.showLogin();
         }
     }
 
