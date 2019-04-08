@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import de.noucake.tubecompanion.Dashboard.DashboardActivity;
 import de.noucake.tubecompanion.Data.DataLoader;
+import de.noucake.tubecompanion.Data.TubeData;
+import de.noucake.tubecompanion.Data.TubeDataHolder;
 import de.noucake.tubecompanion.Login.LoginInputActivity;
 import de.noucake.tubecompanion.Server.TubeServerHandler;
 
@@ -29,6 +31,7 @@ public class TubeCompanion {
     private DashboardActivity dashboardActivity;
 
     private TubeHandler handler;
+    private TubeDataHolder dataHolder;
 
     private TubeCompanion(){
     }
@@ -36,6 +39,7 @@ public class TubeCompanion {
     public void init(){
         server = new TubeServerHandler(this);
         handler = new TubeHandler(this);
+        dataHolder = new TubeDataHolder();
 
         server.connect();
     }
@@ -123,6 +127,13 @@ public class TubeCompanion {
 
     public void displayMessage(String msg){
         Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void addData(TubeData data){
+        boolean success = dataHolder.addData(data);
+        if(success){
+            dashboardActivity.getView().addTubeData(data);
+        }
     }
 
     public TubeHandler getHandler(){

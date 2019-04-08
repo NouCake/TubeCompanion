@@ -89,6 +89,7 @@ public class LoginInputActivity extends AppCompatActivity {
         inputUsername.setEnabled(enabled);
         inputPassword.setEnabled(enabled);
         remember.setEnabled(enabled);
+        //TODO
         //btnLogin.setEnabled(enabled);
     }
 

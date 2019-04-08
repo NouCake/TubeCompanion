@@ -2,7 +2,6 @@ package de.noucake.tubecompanion.Server;
 
 import android.util.Log;
 
-import de.noucake.tubecompanion.Server.Packets.TubePacketGenerator;
 import de.noucake.tubecompanion.TubeCompanion;
 
 public class TubeLoginHandler {

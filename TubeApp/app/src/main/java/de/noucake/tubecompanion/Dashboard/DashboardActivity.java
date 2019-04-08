@@ -20,6 +20,7 @@ import java.util.Random;
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.R;
+import de.noucake.tubecompanion.Server.TubeServerHandler;
 import de.noucake.tubecompanion.TubeCompanion;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -41,28 +42,16 @@ public class DashboardActivity extends AppCompatActivity {
     private void addDummyData(){
         TubeData d = new TubeData("1234", "Hello", "World!");
         d.setComplete(true);
-        view.addTubeData(d);
+        main.addData(d);
         d = new TubeData("1235", "Helly", "Belly!");
         d.setComplete(true);
-        view.addTubeData(d);
+        main.addData(d);
         d = new TubeData("1236", "Hsdaaselly", "Bdadaselly!");
         d.setComplete(false);
-        view.addTubeData(d);
+        main.addData(d);
         d = new TubeData("1237", "Hsdaaselly", "Bdadaselly!");
         d.setComplete(true);
-        view.addTubeData(d);
-        d = new TubeData("4237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        view.addTubeData(d);
-        d = new TubeData("4237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        view.addTubeData(d);
-        d = new TubeData("4237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        view.addTubeData(d);
-        d = new TubeData("4237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        view.addTubeData(d);
+        main.addData(d);
     }
 
     @Override
@@ -78,7 +67,7 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.dashboard_additem:
                 Random r = new Random();
                 String id = r.nextFloat()+"";
-                view.addTubeData(new TubeData(id, "Random","Generator"));
+                main.addData(new TubeData(id, "Random","Generator"));
                 break;
             case R.id.dashboard_removeall:
                 view.removeAll();
@@ -89,6 +78,7 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.setTitle("Host Adress");
                 final EditText input = new EditText(this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT );
+                input.setText(TubeServerHandler.getHostAdress());
                 builder.setView(input);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override

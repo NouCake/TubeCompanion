@@ -3,10 +3,9 @@ package de.noucake.tubecompanion.Server.EventListener;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
-import org.json.JSONObject;
 
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
-import de.noucake.tubecompanion.Server.Packets.PacketParser;
+import de.noucake.tubecompanion.Server.PacketParser;
 import de.noucake.tubecompanion.Server.Packets.TubePacket;
 import de.noucake.tubecompanion.Server.TubeServerHandler;
 import de.noucake.tubecompanion.Server.TubeTypes;
@@ -21,16 +20,26 @@ public class LoginListener implements Emitter.Listener {
 
     @Override
     public void call(Object... args) {
-        JSONObject json = (JSONObject)args[0];
-        TubePacket packet = PacketParser.parse(json);
+        TubePacket packet = PacketParser.parse(args);
+        handlePacket(packet);
+    }
 
+    private void handlePacket(TubePacket packet){
         switch(packet.getType()){
             case TubeTypes.LOGIN_RESPONSE:
-                server.onLoginResponse(((LoginResponsePacket)packet).getRes());
+                onLoginResponsePacket((LoginResponsePacket)packet);
                 break;
             default:
-                Log.d("TubeCompanion-D", " NOPE");
+                Log.d("TubeCompanion-D", "Given Packet is not suitable for this Listener");
         }
+    }
+
+    private void onLoginResponsePacket(LoginResponsePacket packet){
+        int res = packet.getRes();
+        if(packet.getRes() == 0){
+            return;
+        }
+        server.onLoginResponse(res);
     }
 
 }

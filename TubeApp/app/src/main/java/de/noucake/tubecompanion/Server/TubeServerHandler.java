@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Server.EventListener.ConnectListener;
 import de.noucake.tubecompanion.Server.EventListener.LoginListener;
-import de.noucake.tubecompanion.Server.Packets.TubePacketGenerator;
 import de.noucake.tubecompanion.TubeCompanion;
 import de.noucake.tubecompanion.TubeHandler;
 
@@ -31,7 +30,10 @@ public class TubeServerHandler {
         loginHandler = new TubeLoginHandler(main, this);
         connectListener = new ConnectListener(this);
         loginListener = new LoginListener(this);
-        host = DataLoader.loadHostAdress(main.getMainActivity());
+
+        String loadedHost = DataLoader.loadHostAdress(main.getMainActivity());
+        if(loadedHost != null)
+            host = loadedHost;
     }
 
     public void connect(){
@@ -85,5 +87,7 @@ public class TubeServerHandler {
         return socket.connected();
     }
 
-
+    public static String getHostAdress() {
+        return host;
+    }
 }

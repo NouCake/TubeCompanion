@@ -4,40 +4,24 @@ import org.json.JSONObject;
 
 public abstract class TubePacket {
 
-    private JSONObject raw;
-    private boolean valid;
-    private String error;
     private final int type;
 
-    public TubePacket(JSONObject packet, int type){
-        this.raw = packet;
+    protected final JSONObject mRaw;
+    protected boolean mValid;
+
+    public TubePacket(int type, JSONObject packet){
         this.type = type;
-
-        valid = extractData();
+        this.mRaw = packet;
+        mValid = false;
     }
 
-    protected abstract boolean extractData();
-
-    protected void setError(String error) {
-        valid = false;
-        this.error = error;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    public JSONObject getRawPacket() {
-        return raw;
-    }
+    abstract void parse();
 
     public int getType() {
         return type;
     }
 
-
+    public boolean isValid() {
+        return mValid;
+    }
 }

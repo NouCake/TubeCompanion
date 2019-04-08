@@ -1,4 +1,4 @@
-package de.noucake.tubecompanion.Server.Packets;
+package de.noucake.tubecompanion.Server;
 
 import de.noucake.tubecompanion.Server.TubeTypes;
 
@@ -16,6 +16,14 @@ public class TubePacketGenerator {
         packet += generateAttribute("password", password,true);
         packet += generateAttribute("apptype", TubeTypes.LOGIN_DEVICE,false);
         packet += "}";
+        return packet;
+    }
+
+    public static String generateRequestPendingPacket(int reqid, int reqtype){
+        String packet = "{";
+        packet += generateAttribute("type", 0, true);
+        packet += generateAttribute("reqid", reqid, true);
+        packet += generateAttribute("reqtype", reqtype, false);
         return packet;
     }
 

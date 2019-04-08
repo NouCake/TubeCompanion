@@ -10,24 +10,18 @@ public class LoginResponsePacket extends TubePacket {
     private int res;
 
     public LoginResponsePacket(JSONObject packet) {
-        super(packet, TubeTypes.LOGIN_RESPONSE);
+        super(TubeTypes.LOGIN_RESPONSE, packet);
     }
 
     @Override
-    protected boolean extractData() {
-        int type;
+    void parse() {
         try {
-            type = getRawPacket().getInt("type");
-            res = getRawPacket().getInt("res");
+            res = mRaw.getInt("res");
+            mValid = true;
         } catch (JSONException e) {
-            setError("JSON Error: couldn't gather attributes");
-            return false;
+            mValid = false;
+            return;
         }
-        if(type != this.getType()){
-            setError("Type is Wrong!");
-            return false;
-        }
-        return true;
     }
 
     public int getRes() {
