@@ -2,12 +2,6 @@ package de.noucake.tubecompanion;
 
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import de.noucake.tubecompanion.Data.TubeData;
 
 public class TubeHandler extends Handler {
 
@@ -16,7 +10,7 @@ public class TubeHandler extends Handler {
     public static final int SHOW_MESSAGE = 2;
     public static final int SHOW_LOGIN = 3;
 
-    private TubeCompanion main;
+    private final TubeCompanion main;
     private String msg;
 
     public TubeHandler(TubeCompanion main){
@@ -30,7 +24,7 @@ public class TubeHandler extends Handler {
                 main.onConnectionSucceed();
                 break;
             case LOGIN_INPUT_READY:
-                main.onLoginInputReady();
+                main.onLoginInputActivityReady();
                 break;
             case SHOW_MESSAGE:
                 main.displayMessage(this.msg);

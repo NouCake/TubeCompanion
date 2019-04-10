@@ -17,13 +17,13 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class DashboardView {
 
-    private DashboardActivity dashboard;
-    private LayoutInflater inflater;
-    private ViewGroup contentParent;
-    private DashboardHandler handler;
-    private DashboardInputListener dashboardInput;
+    private final DashboardActivity dashboard;
+    private final LayoutInflater inflater;
+    private final ViewGroup contentParent;
+    private final DashboardHandler handler;
+    private final DashboardInputListener dashboardInput;
 
-    private List<DashboardItem> items;
+    private final List<DashboardItem> items;
 
     public static Bitmap defaultPicture;
 
@@ -42,7 +42,6 @@ public class DashboardView {
     private void loadDefaultPicture(){
         defaultPicture = BitmapFactory.decodeResource(dashboard.getResources(), R.drawable.loading);
     }
-
     private void addDahboardItem(TubeData data){
         ViewGroup v = (ViewGroup)inflater.inflate(R.layout.dasboard_item, null, false);
         dashboard.registerForContextMenu(v);
@@ -55,41 +54,64 @@ public class DashboardView {
     /**
      * Should only be called by (Dashboard)Handler
      * @param data
-     */
-    void addTubeDataAsHandler(TubeData data){
+     */void addTubeDataAsHandler(TubeData data){
         addDahboardItem(data);
     }
-
     /**
      * Should only be called by (Dashboard)Handler
      * @param data
-     */
-    void removeTubeDataAsHandler(TubeData data){
+     */void removeTubeDataAsHandler(TubeData data){
         DashboardItem item = getItemByTubeData(data);
         contentParent.removeView(item.getItemRoot());
         items.remove(item);
     }
-
     /**
      * Should only be called by (Dashboard)Handler
      * @param item
-     */
-    void removeItemAsHandler(DashboardItem item){
+     */void removeItemAsHandler(DashboardItem item){
         contentParent.removeView(item.getItemRoot());
         items.remove(item);
     }
-
     /**
      * Should only be called by (Dashboard)Handler
-     */
-    void removeAllAsHandler(){
+     */void removeAllAsHandler(){
         for(DashboardItem item : items){
             contentParent.removeView(item.getItemRoot());
+        }
+    }
+    /**
+     * Since there is no option to change the order inside a LinearLayout
+     * this is the only option to reorder the elements.
+     * According to StackOverflow the performance of this isn't too bad.
+     *
+     * Sorts incomplete data to top, then complete data
+     * Order inside these groups is order in items
+     * I need more comment than function!
+     */void reorderItemsAsHandler(){
+        contentParent.removeAllViews();
+        for(DashboardItem item : items){
+            if(!item.getData().isComplete()){
+                contentParent.addView(item.getItemRoot());
+            }
+        }
+        for(DashboardItem item : items){
+            if(item.getData().isComplete()){
+                contentParent.addView(item.getItemRoot());
+            }
         }
     }
 
     void removeItem(DashboardItem item){
         handler.enqueueRemove(item);
+    }
+    public void addTubeData(TubeData data){
+        handler.enqueueAdd(data);
+    }
+    public void removeTubeData(TubeData data){
+        handler.enqueueRemove(data);
+    }
+    public void removeAll() {
+        handler.enqueueRemoveAll();
     }
 
     private DashboardItem getItemByTubeData(TubeData data){
@@ -101,7 +123,6 @@ public class DashboardView {
         Log.d("TubeCompanion-D", "Could not find Item in View");
         return null;
     }
-
     public DashboardItem getItemByView(View v){
         for(DashboardItem i : items){
             if(i.getItemRoot() == v){
@@ -109,18 +130,6 @@ public class DashboardView {
             }
         }
         return null;
-    }
-
-    public void addTubeData(TubeData data){
-        handler.enqueueAdd(data);
-    }
-
-    public void removeTubeData(TubeData data){
-        handler.enqueueRemove(data);
-    }
-
-    public void removeAll() {
-        handler.enqueueRemoveAll();
     }
 
 }

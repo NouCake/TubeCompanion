@@ -31,43 +31,24 @@ public class DashboardHandler extends Handler {
         }
         sendEmptyMessage(0);
     }
-
     void enqueueRemove(TubeData data){
         synchronized (queue){
             queue.add(new HandlerCommand(REMOVE_DATA, data));
         }
         sendEmptyMessage(0);
     }
-
     void enqueueRemove(DashboardItem item){
         synchronized (queue){
             queue.add(new HandlerCommand(REMOVE_ITEM, item));
         }
         sendEmptyMessage(0);
     }
-
     void enqueueRemoveAll(){
         synchronized (queue){
             queue.add(new HandlerCommand(REMOVE_ALL));
         }
         sendEmptyMessage(0);
 
-    }
-
-    private void doAdd(HandlerCommand command){
-        dashboard.getView().addTubeDataAsHandler(command.data);
-    }
-
-    private void doRemoveData(HandlerCommand command){
-        dashboard.getView().removeTubeDataAsHandler(command.data);
-    }
-
-    private void doRemoveItem(HandlerCommand command){
-        dashboard.getView().removeItemAsHandler(command.item);
-    }
-
-    private void doRemoveAll(HandlerCommand command){
-        dashboard.getView().removeAllAsHandler();
     }
 
     private void doCommand(HandlerCommand command){
@@ -86,6 +67,19 @@ public class DashboardHandler extends Handler {
                 break;
         }
     }
+    private void doAdd(HandlerCommand command){
+        dashboard.getView().addTubeDataAsHandler(command.data);
+    }
+    private void doRemoveData(HandlerCommand command){
+        dashboard.getView().removeTubeDataAsHandler(command.data);
+    }
+    private void doRemoveItem(HandlerCommand command){
+        dashboard.getView().removeItemAsHandler(command.item);
+    }
+    private void doRemoveAll(HandlerCommand command){
+        dashboard.getView().removeAllAsHandler();
+    }
+
 
     @Override
     public void handleMessage(Message msg) {

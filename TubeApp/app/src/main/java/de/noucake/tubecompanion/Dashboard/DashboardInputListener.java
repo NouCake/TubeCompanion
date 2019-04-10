@@ -10,12 +10,13 @@ import de.noucake.tubecompanion.R;
 
 public class DashboardInputListener implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener, View.OnClickListener {
 
-    private DashboardActivity dashboard;
-    private DashboardItem lastSelectedItem;
+    private final DashboardActivity dashboard;
     private AlertDialog renameDialog;
     private AlertDialog.Builder renameDialogBuilder;
     private EditText renameDialogInputTitle;
     private EditText renameDialogInputAuthor;
+
+    private DashboardItem lastSelectedItem;
 
     public DashboardInputListener(DashboardActivity dashboard){
         this.dashboard = dashboard;
@@ -33,6 +34,11 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
         renameDialogBuilder.setView(v);
         renameDialog = renameDialogBuilder.create();
     }
+    private void showRenameDialog(){
+        renameDialogInputTitle.setText(lastSelectedItem.getData().getTitle());
+        renameDialogInputAuthor.setText(lastSelectedItem.getData().getAuthor());
+        renameDialog.show();
+    }
 
 
     @Override
@@ -45,7 +51,6 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
             }
         }
     }
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()){
@@ -64,13 +69,6 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
         }
         return false;
     }
-
-    private void showRenameDialog(){
-        renameDialogInputTitle.setText(lastSelectedItem.getData().getTitle());
-        renameDialogInputAuthor.setText(lastSelectedItem.getData().getAuthor());
-        renameDialog.show();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -85,4 +83,5 @@ public class DashboardInputListener implements View.OnCreateContextMenuListener,
                 break;
         }
     }
+
 }

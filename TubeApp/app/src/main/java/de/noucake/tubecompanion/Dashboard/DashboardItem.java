@@ -19,8 +19,8 @@ public class DashboardItem {
     private static final int colorIncomplete = 0xFFF0F0F0;
     private static final int colorComplete = 0xFFFAFAFA;
 
-    private ViewGroup itemRoot;
-    private TubeData data;
+    private final ViewGroup itemRoot;
+    private final TubeData data;
 
     private ImageView image;
     private TextView id;
@@ -36,36 +36,12 @@ public class DashboardItem {
         updateViewData();
     }
 
-    public void updateViewData(){
-        id.setText(data.getId());
-        title.setText(data.getTitle());
-        author.setText(data.getAuthor());
-        prog.setProgress(data.getDownloadProgress());
-        image.setImageBitmap(DashboardView.defaultPicture);
-        if(data.isComplete()){
-            itemRoot.setBackgroundColor(colorComplete);
-        } else {
-            itemRoot.setBackgroundColor(colorIncomplete);
-        }
-    }
-
     private void initViewContent(){
         int elements = itemRoot.getChildCount();
         for(int i = 0; i < elements; i++){
             registerView(itemRoot.getChildAt(i));
         }
     }
-
-    public void setIncomplete(){
-        data.setComplete(false);
-        itemRoot.setBackgroundColor(colorIncomplete);
-    }
-
-    public void setComplete(){
-        data.setComplete(true);
-        itemRoot.setBackgroundColor(colorComplete);
-    }
-
     private void registerView(View v){
         switch(v.getId()){
             case R.id.dashboard_item_title:
@@ -84,11 +60,30 @@ public class DashboardItem {
                 id = (TextView)v;
         }
     }
+    public void updateViewData(){
+        id.setText(data.getId());
+        title.setText(data.getTitle());
+        author.setText(data.getAuthor());
+        prog.setProgress(data.getDownloadProgress());
+        image.setImageBitmap(DashboardView.defaultPicture);
+        if(data.isComplete()){
+            itemRoot.setBackgroundColor(colorComplete);
+        } else {
+            itemRoot.setBackgroundColor(colorIncomplete);
+        }
+    }
 
+    public void setIncomplete(){
+        data.setComplete(false);
+        itemRoot.setBackgroundColor(colorIncomplete);
+    }
+    public void setComplete(){
+        data.setComplete(true);
+        itemRoot.setBackgroundColor(colorComplete);
+    }
     public TubeData getData() {
         return data;
     }
-
     public ViewGroup getItemRoot() {
         return itemRoot;
     }

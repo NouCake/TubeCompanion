@@ -87,6 +87,7 @@ PENDING_DOWNLOAD_REQUESTS
 #########################
 {						#
 	type: 4				#
+	reqid: int			#
 	ids: Array[String]	#
 }						#
 #########################

@@ -5,7 +5,6 @@ import de.noucake.tubecompanion.Server.TubeTypes;
 public class TubePacketGenerator {
 
     private TubePacketGenerator(){
-
     }
 
     public static String generateLoginPacket(String username, String password){

@@ -1,5 +1,6 @@
 package de.noucake.tubecompanion.Server.Packets;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class TubePacket {
@@ -15,7 +16,15 @@ public abstract class TubePacket {
         mValid = false;
     }
 
-    abstract void parse();
+    public void parse(){
+        try {
+            parseData();
+        } catch (JSONException e) {
+            mValid = false;
+        }
+    }
+
+    protected abstract void parseData() throws JSONException;
 
     public int getType() {
         return type;

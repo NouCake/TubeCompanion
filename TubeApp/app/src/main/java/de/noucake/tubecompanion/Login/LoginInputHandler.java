@@ -7,7 +7,7 @@ import de.noucake.tubecompanion.R;
 
 public class LoginInputHandler implements View.OnClickListener {
 
-    private LoginInputActivity activity;
+    private final LoginInputActivity activity;
 
     public LoginInputHandler(LoginInputActivity activity){
         this.activity = activity;

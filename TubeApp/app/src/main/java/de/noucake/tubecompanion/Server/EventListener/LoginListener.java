@@ -7,14 +7,14 @@ import com.github.nkzawa.emitter.Emitter;
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
 import de.noucake.tubecompanion.Server.PacketParser;
 import de.noucake.tubecompanion.Server.Packets.TubePacket;
-import de.noucake.tubecompanion.Server.TubeServerHandler;
+import de.noucake.tubecompanion.Server.TubeServer;
 import de.noucake.tubecompanion.Server.TubeTypes;
 
 public class LoginListener implements Emitter.Listener {
 
-    private TubeServerHandler server;
+    private final TubeServer server;
 
-    public LoginListener(TubeServerHandler server){
+    public LoginListener(TubeServer server){
         this.server = server;
     }
 

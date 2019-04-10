@@ -4,11 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
-import de.noucake.tubecompanion.Server.Packets.PendingRequestPacket;
+import de.noucake.tubecompanion.Server.Packets.PendingRequestsPacket;
 import de.noucake.tubecompanion.Server.Packets.TubePacket;
 
 public class PacketParser {
 
+    private PacketParser(){
+    }
 
     /**
      * Gets the input of a Emitter.Listener and returns a TubePacket
@@ -24,6 +26,7 @@ public class PacketParser {
         JSONObject o = (JSONObject)args[0];
         int type = getType(o);
         TubePacket packet =  getPacket(type, o);
+        packet.parse();
         if(packet.isValid()){
             return packet;
         }
@@ -36,7 +39,7 @@ public class PacketParser {
             case TubeTypes.LOGIN_RESPONSE:
                 return new LoginResponsePacket(o);
             case TubeTypes.PENDING_DOWNLOAD_REQUEST:
-                return new PendingRequestPacket(o);
+                return new PendingRequestsPacket(o);
         }
         return null;
     }

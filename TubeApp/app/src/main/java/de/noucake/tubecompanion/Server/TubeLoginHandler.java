@@ -12,11 +12,11 @@ public class TubeLoginHandler {
     private boolean lastLoginSucceed;
     private boolean logged;
 
-    private TubeCompanion main;
-    private TubeServerHandler server;
+    private final TubeCompanion main;
+    private final TubeServer server;
 
 
-    public TubeLoginHandler(TubeCompanion main, TubeServerHandler server){
+    public TubeLoginHandler(TubeCompanion main, TubeServer server){
         this.main = main;
         this.server = server;
         credentials = false;

@@ -5,22 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import java.util.Random;
 
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.R;
-import de.noucake.tubecompanion.Server.TubeServerHandler;
+import de.noucake.tubecompanion.Server.TubeServer;
 import de.noucake.tubecompanion.TubeCompanion;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -59,7 +53,6 @@ public class DashboardActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.dashboard_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -78,7 +71,7 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.setTitle("Host Adress");
                 final EditText input = new EditText(this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT );
-                input.setText(TubeServerHandler.getHostAdress());
+                input.setText(main.getServer().getHostAdress());
                 builder.setView(input);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -106,7 +99,5 @@ public class DashboardActivity extends AppCompatActivity {
     public DashboardView getView() {
         return view;
     }
-
-
 
 }

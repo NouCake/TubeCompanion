@@ -15,7 +15,7 @@ import de.noucake.tubecompanion.TubeCompanion;
 import de.noucake.tubecompanion.TubeHandler;
 
 /**
- * This Activity is for the sole purpose of grabbing the login information.
+ * This Activity is for the sole purpose of grabbing the login information from User.
  */
 public class LoginInputActivity extends AppCompatActivity {
 
@@ -31,8 +31,7 @@ public class LoginInputActivity extends AppCompatActivity {
     private String username;
     private String password;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -47,6 +46,18 @@ public class LoginInputActivity extends AppCompatActivity {
         setListener();
         fillFields();
     }
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        Log.d("TubeCompanion-D", "LoginActivity stopped");
+    }
 
     private void findViewContent(){
         register = findViewById(R.id.login_register);
@@ -55,12 +66,10 @@ public class LoginInputActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.login_input_button);
         remember = findViewById(R.id.login_input_remember);
     }
-
     private void setListener(){
         register.setOnClickListener(handler);
         btnLogin.setOnClickListener(handler);
     }
-
     private void fillFields(){
         String[] data = DataLoader.loadLoginData(this);
         if(data != null){
@@ -72,7 +81,17 @@ public class LoginInputActivity extends AppCompatActivity {
         inputPassword.setText(password);
         remember.setChecked(true);
     }
+    private void setFormEnabled(boolean enabled){
+        inputUsername.setEnabled(enabled);
+        inputPassword.setEnabled(enabled);
+        remember.setEnabled(enabled);
+        //TODO
+        //btnLogin.setEnabled(enabled);
+    }
 
+    public void showLogin(){
+        setFormEnabled(true);
+    }
     public void onLoginClicked(){
         username = inputUsername.getText().toString();
         password = inputPassword.getText().toString();
@@ -85,40 +104,13 @@ public class LoginInputActivity extends AppCompatActivity {
         main.getHandler().sendEmptyMessage(TubeHandler.LOGIN_INPUT_READY);
     }
 
-    private void setFormEnabled(boolean enabled){
-        inputUsername.setEnabled(enabled);
-        inputPassword.setEnabled(enabled);
-        remember.setEnabled(enabled);
-        //TODO
-        //btnLogin.setEnabled(enabled);
-    }
-
-    public void showLogin(){
-        setFormEnabled(true);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(true);
-            return true;
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
 
     public boolean isRememberChecked(){
         return remember.isChecked();
     }
-
     public String[] getLoginData(){
         String[] data = {username, password};
         return data;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("TubeCompanion-D", "LoginActivity stopped");
-    }
 }

@@ -14,14 +14,8 @@ public class LoginResponsePacket extends TubePacket {
     }
 
     @Override
-    void parse() {
-        try {
-            res = mRaw.getInt("res");
-            mValid = true;
-        } catch (JSONException e) {
-            mValid = false;
-            return;
-        }
+    protected void parseData() throws JSONException{
+        res = mRaw.getInt("res");
     }
 
     public int getRes() {

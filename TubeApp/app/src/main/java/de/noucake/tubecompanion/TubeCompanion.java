@@ -10,10 +10,11 @@ import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Data.TubeDataHolder;
 import de.noucake.tubecompanion.Login.LoginInputActivity;
-import de.noucake.tubecompanion.Server.TubeServerHandler;
+import de.noucake.tubecompanion.Server.TubeServer;
 
 public class TubeCompanion {
 
+    //SINGLETON START
     private static TubeCompanion singleton;
     public static TubeCompanion getInstance(Activity activity){
         if(singleton == null){
@@ -23,8 +24,9 @@ public class TubeCompanion {
         singleton.init();
         return singleton;
     }
+    //SINGLETON END
 
-    private TubeServerHandler server;
+    private TubeServer server;
 
     private MainActivity mainActivity;
     private LoginInputActivity loginActivity;
@@ -37,7 +39,7 @@ public class TubeCompanion {
     }
 
     public void init(){
-        server = new TubeServerHandler(this);
+        server = new TubeServer(this);
         handler = new TubeHandler(this);
         dataHolder = new TubeDataHolder();
 
@@ -63,7 +65,30 @@ public class TubeCompanion {
 
         startLogin();
     }
+    public void onLoginSucceed(){
+        if(loginActivity != null){
+            if(loginActivity.isRememberChecked()){
+                String[] data = loginActivity.getLoginData();
+                DataLoader.saveLoginData(mainActivity, data[0], data[1], true);
+            }
+        }
 
+        stopLogin();
+    }
+    public void onLoginInputActivityReady(){
+        assert  loginActivity != null;
+
+        String[] data = loginActivity.getLoginData();
+        server.login(data[0], data[1]);
+    }
+
+    private void startLoginActivity(){
+        assert mainActivity != null;
+        assert loginActivity == null;
+        Intent intent = new Intent(mainActivity, LoginInputActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        mainActivity.startActivity(intent);
+    }
     private void startLogin(){
         assert mainActivity != null;
 
@@ -79,18 +104,12 @@ public class TubeCompanion {
             startLoginActivity();
         }
     }
-
-    public void onLoginSucceed(){
+    public void stopLogin(){
         if(loginActivity != null){
-            if(loginActivity.isRememberChecked()){
-                String[] data = loginActivity.getLoginData();
-                DataLoader.saveLoginData(mainActivity, data[0], data[1], true);
-            }
+            loginActivity.finish();
+            loginActivity = null;
         }
-
-        stopLogin();
     }
-
     public void showLogin(){
         if(loginActivity == null){
             startLoginActivity();
@@ -98,37 +117,13 @@ public class TubeCompanion {
             loginActivity.showLogin();
         }
     }
-
     public void requestLoginData(){
         showLogin();
-    }
-
-    public void stopLogin(){
-        if(loginActivity != null){
-            loginActivity.finish();
-            loginActivity = null;
-        }
-    }
-
-    private void startLoginActivity(){
-        assert mainActivity != null;
-        assert loginActivity == null;
-        Intent intent = new Intent(mainActivity, LoginInputActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        mainActivity.startActivity(intent);
-    }
-
-    public void onLoginInputReady(){
-        assert  loginActivity != null;
-
-        String[] data = loginActivity.getLoginData();
-        server.login(data[0], data[1]);
     }
 
     public void displayMessage(String msg){
         Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
     }
-
     public void addData(TubeData data){
         boolean success = dataHolder.addData(data);
         if(success){
@@ -139,15 +134,12 @@ public class TubeCompanion {
     public TubeHandler getHandler(){
         return handler;
     }
-
-    public TubeServerHandler getServer() {
+    public TubeServer getServer() {
         return server;
     }
-
     public DashboardActivity getDashboardActivity() {
         return dashboardActivity;
     }
-
     public MainActivity getMainActivity() {
         return mainActivity;
     }

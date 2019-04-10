@@ -1,3 +1,5 @@
+Server
+######
 audio converting error:
 when file already exists
 
@@ -5,6 +7,8 @@ when file already exists
 packet receiving:
 when receiving packet may numbers are received as string
 
+onRequest
+=> move logic to event handler
 
 App
 ###
