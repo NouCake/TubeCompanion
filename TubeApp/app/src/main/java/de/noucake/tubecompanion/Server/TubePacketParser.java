@@ -6,12 +6,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
+import de.noucake.tubecompanion.Server.Packets.MetaDataPacket;
 import de.noucake.tubecompanion.Server.Packets.PendingRequestsPacket;
 import de.noucake.tubecompanion.Server.Packets.TubePacket;
 
-public class PacketParser {
+public class TubePacketParser {
 
-    private PacketParser(){
+    private TubePacketParser(){
     }
 
     /**
@@ -39,7 +40,10 @@ public class PacketParser {
                 return new LoginResponsePacket(o);
             case TubeTypes.PENDING_DOWNLOAD_REQUEST:
                 return new PendingRequestsPacket(o);
+            case TubeTypes.META_DATA:
+                return new MetaDataPacket(o);
         }
+        Log.d("TubeCompanion-D","Unsupported Packet Type " + type);
         return null;
     }
 

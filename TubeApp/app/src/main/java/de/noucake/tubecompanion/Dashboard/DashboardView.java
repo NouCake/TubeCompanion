@@ -42,7 +42,7 @@ public class DashboardView {
     private void loadDefaultPicture(){
         defaultPicture = BitmapFactory.decodeResource(dashboard.getResources(), R.drawable.loading);
     }
-    private void addDahboardItem(TubeData data){
+    private void addDashboardItem(TubeData data){
         ViewGroup v = (ViewGroup)inflater.inflate(R.layout.dasboard_item, null, false);
         dashboard.registerForContextMenu(v);
         v.setOnCreateContextMenuListener(dashboardInput);
@@ -55,7 +55,7 @@ public class DashboardView {
      * Should only be called by (Dashboard)Handler
      * @param data
      */void addTubeDataAsHandler(TubeData data){
-        addDahboardItem(data);
+        addDashboardItem(data);
     }
     /**
      * Should only be called by (Dashboard)Handler
@@ -100,18 +100,31 @@ public class DashboardView {
             }
         }
     }
-
-    void removeItem(DashboardItem item){
-        handler.enqueueRemove(item);
+    /**
+     * */void reorderItems(){
+         handler.enqueueReorder();
     }
+    void updateAsHandler(){
+        for(DashboardItem item : items){
+            item.updateViewData();
+        }
+        reorderItems();
+    }
+
     public void addTubeData(TubeData data){
         handler.enqueueAdd(data);
     }
     public void removeTubeData(TubeData data){
         handler.enqueueRemove(data);
     }
+    public void removeItem(DashboardItem item){
+        handler.enqueueRemove(item);
+    }
     public void removeAll() {
         handler.enqueueRemoveAll();
+    }
+    public void update(){
+         handler.enqueueUpdate();
     }
 
     private DashboardItem getItemByTubeData(TubeData data){

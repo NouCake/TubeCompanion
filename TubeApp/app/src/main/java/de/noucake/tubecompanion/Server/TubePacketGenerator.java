@@ -1,5 +1,6 @@
 package de.noucake.tubecompanion.Server;
 
+import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.Server.TubeTypes;
 
@@ -20,14 +21,36 @@ public class TubePacketGenerator {
     }
 
     public static String generateRequestPacket(TubeRequest req){
-        return generateRequestPacket(req.getType(), req.getReqID(), req.getReqtype());
+
+        switch (req.getReqtype()){
+            case TubeTypes.REQUEST_PENDING:
+                return generatePendingRequestsRequest(req.getType(), req.getReqID(), req.getReqtype());
+            case TubeTypes.REQUEST_META:
+                return generateMetaDataRequest((MetaDataRequest) req);
+        }
+
+        return "";
     }
 
-    public static String generateRequestPacket(int type, int reqid, int reqtype){
+    private static String generatePendingRequestsRequest(int type, int reqid, int reqtype){
         String packet = "{";
         packet += generateAttribute("type", type, true);
         packet += generateAttribute("reqid", reqid, true);
         packet += generateAttribute("reqtype", reqtype, false);
+        packet += "}";
+        return packet;
+    }
+
+    public static String generateMetaDataRequest(MetaDataRequest req){
+        return generateMetaDataRequest(req.getType(), req.getReqID(), req.getReqtype(), req.getId());
+    }
+
+    private static String generateMetaDataRequest(int type, int reqid, int reqtype, String id){
+        String packet = "{";
+        packet += generateAttribute("type", type, true);
+        packet += generateAttribute("reqid", reqid, true);
+        packet += generateAttribute("reqtype", reqtype, true);
+        packet += generateAttribute("id", id, false);
         packet += "}";
         return packet;
     }

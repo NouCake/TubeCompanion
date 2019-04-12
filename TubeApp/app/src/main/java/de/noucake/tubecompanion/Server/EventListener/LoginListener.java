@@ -5,7 +5,7 @@ import android.util.Log;
 import com.github.nkzawa.emitter.Emitter;
 
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
-import de.noucake.tubecompanion.Server.PacketParser;
+import de.noucake.tubecompanion.Server.TubePacketParser;
 import de.noucake.tubecompanion.Server.Packets.TubePacket;
 import de.noucake.tubecompanion.Server.TubeServer;
 import de.noucake.tubecompanion.Server.TubeTypes;
@@ -20,7 +20,7 @@ public class LoginListener implements Emitter.Listener {
 
     @Override
     public void call(Object... args) {
-        TubePacket packet = PacketParser.parse(args);
+        TubePacket packet = TubePacketParser.parse(args);
         if(packet != null && packet.isValid()){
             handlePacket(packet);
         }

@@ -5,9 +5,11 @@ import android.util.Log;
 import com.github.nkzawa.emitter.Emitter;
 
 import de.noucake.tubecompanion.Data.DataLoader;
+import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Server.EventListener.ConnectListener;
 import de.noucake.tubecompanion.Server.EventListener.ResponseListener;
 import de.noucake.tubecompanion.Server.EventListener.LoginListener;
+import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.PendingRequestsRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.TubeCompanion;
@@ -76,6 +78,14 @@ public class TubeServer {
     }
     public void sendPendingRequestsRequest(){
         PendingRequestsRequest req = new PendingRequestsRequest(TubeRequestHandler.getNextReqID());
+        requestHandler.addRequest(req);
+        sendRequest(req);
+    }
+    /**
+     * TubeData over (String)ID to gurantee TubeData exists
+     * (And Probably is in DataHolder)
+     * */public void sendMetaDataRequest(TubeData data){
+        MetaDataRequest req = new MetaDataRequest(TubeRequestHandler.getNextReqID(), data.getId());
         requestHandler.addRequest(req);
         sendRequest(req);
     }

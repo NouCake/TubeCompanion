@@ -54,6 +54,9 @@ public class TubeCompanion {
             dashboardActivity = (DashboardActivity)activity;
         }
     }
+    private void onIncompleteTubeDataAdded(TubeData data){
+        server.sendMetaDataRequest(data);
+    }
 
     public void onConnectionSucceed(){
         if(!server.isConnected()){
@@ -80,6 +83,9 @@ public class TubeCompanion {
 
         String[] data = loginActivity.getLoginData();
         server.login(data[0], data[1]);
+    }
+    public void onTubeDataUpdated(){
+        dashboardActivity.getView().update();
     }
 
     private void startLoginActivity(){
@@ -128,9 +134,15 @@ public class TubeCompanion {
         boolean success = dataHolder.addData(data);
         if(success){
             dashboardActivity.getView().addTubeData(data);
+            if(!data.isComplete()){
+                onIncompleteTubeDataAdded(data);
+            }
         }
     }
 
+    public TubeData getDataByID(String ID){
+        return dataHolder.findByID(ID);
+    }
     public TubeHandler getHandler(){
         return handler;
     }

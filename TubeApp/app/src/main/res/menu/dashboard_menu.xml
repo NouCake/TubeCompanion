@@ -13,4 +13,7 @@
     <item
         android:id="@+id/dashboard_host"
         android:title="Set Host Adress" />
+    <item
+        android:id="@+id/dashboard_pending"
+        android:title="Request Pending" />
 </menu>

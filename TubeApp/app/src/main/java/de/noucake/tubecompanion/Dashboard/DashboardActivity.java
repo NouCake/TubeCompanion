@@ -72,6 +72,8 @@ public class DashboardActivity extends AppCompatActivity {
                 //TODO: IMPLEMENT
                 main.showLogin();
                 break;
+            case R.id.dashboard_pending:
+                main.getServer().sendPendingRequestsRequest();
         }
 
         return super.onOptionsItemSelected(item);

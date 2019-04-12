@@ -14,13 +14,15 @@ public class DashboardHandler extends Handler {
     private static final int REMOVE_DATA = 110;
     private static final int REMOVE_ITEM = 111;
     private static final int REMOVE_ALL = 120;
+    private static final int REORDER = 130;
+    private static final int UPDATE = 140;
 
 
-    private DashboardActivity dashboard;
-    private List<HandlerCommand> queue;
+    private final DashboardActivity dashboard;
+    private final List<HandlerCommand> queue;
 
 
-    public DashboardHandler(DashboardActivity dashboard){
+    DashboardHandler(DashboardActivity dashboard){
         this.dashboard = dashboard;
         queue = new LinkedList<>();
     }
@@ -50,6 +52,18 @@ public class DashboardHandler extends Handler {
         sendEmptyMessage(0);
 
     }
+    void enqueueReorder() {
+        synchronized (queue){
+            queue.add(new HandlerCommand(REORDER));
+        }
+        sendEmptyMessage(0);
+    }
+    void enqueueUpdate(){
+        synchronized (queue){
+            queue.add(new HandlerCommand(UPDATE));
+        }
+        sendEmptyMessage(0);
+    }
 
     private void doCommand(HandlerCommand command){
         switch (command.type){
@@ -65,6 +79,12 @@ public class DashboardHandler extends Handler {
             case REMOVE_ALL:
                 doRemoveAll(command);
                 break;
+            case REORDER:
+                doReorder(command);
+                break;
+            case UPDATE:
+                doUpdate(command);
+                break;
         }
     }
     private void doAdd(HandlerCommand command){
@@ -79,7 +99,12 @@ public class DashboardHandler extends Handler {
     private void doRemoveAll(HandlerCommand command){
         dashboard.getView().removeAllAsHandler();
     }
-
+    private void doReorder(HandlerCommand command){
+        dashboard.getView().reorderItemsAsHandler();
+    }
+    private void doUpdate(HandlerCommand command){
+        dashboard.getView().updateAsHandler();
+    }
 
     @Override
     public void handleMessage(Message msg) {

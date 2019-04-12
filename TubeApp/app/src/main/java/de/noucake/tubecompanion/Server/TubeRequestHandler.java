@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Server.Packets.RequestResponsePacket;
+import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.PendingRequestsRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.TubeCompanion;
@@ -26,18 +27,13 @@ public class TubeRequestHandler {
         requests = new LinkedList<>();
     }
 
-    private TubeRequest getRequestByReqID(int reqid){
-        for(TubeRequest req : requests){
-            if(req.getReqID() == reqid){
-                return req;
-            }
-        }
-        return null;
-    }
     private void onRequestFullfilled(TubeRequest req){
         switch (req.getReqtype()){
             case TubeTypes.REQUEST_PENDING:
                 onPendingRequestsRequestFullfilled((PendingRequestsRequest)req);
+                break;
+            case TubeTypes.REQUEST_META:
+                onMetaDataRequestFullfilled((MetaDataRequest)req);
                 break;
         }
     }
@@ -45,6 +41,19 @@ public class TubeRequestHandler {
         for(String id : req.getIds()){
             main.addData(new TubeData(id));
         }
+    }
+    private void onMetaDataRequestFullfilled(MetaDataRequest req){
+        TubeData data = main.getDataByID(req.getId());
+        if(data == null){
+            Log.d("TubeCompanion-D", "Error, No TubeData for requested data");
+            return;
+        }
+
+        data.setTitle(req.getTitle());
+        //data.setImagesize(req.getImagesize());
+        //data.setAudiosize(req.getAudiosize());
+
+        main.onTubeDataUpdated();
     }
 
     public void onResponse(RequestResponsePacket packet){
@@ -65,6 +74,15 @@ public class TubeRequestHandler {
     public void addRequest(TubeRequest req){
         Log.d("TubeCompanion-D", "Request Added");
         requests.add(req);
+    }
+
+    private TubeRequest getRequestByReqID(int reqid){
+        for(TubeRequest req : requests){
+            if(req.getReqID() == reqid){
+                return req;
+            }
+        }
+        return null;
     }
 
 }
