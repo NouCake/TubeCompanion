@@ -1,5 +1,7 @@
 package de.noucake.tubecompanion.Server;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +22,7 @@ public class PacketParser {
      */
     public static TubePacket parse(Object... args){
         if(args.length <= 0 || !(args[0] instanceof JSONObject)){
+            Log.d("TubeCompanion-D", "Parser called with Invalid args");
             return null;
         }
 
@@ -27,11 +30,7 @@ public class PacketParser {
         int type = getType(o);
         TubePacket packet =  getPacket(type, o);
         packet.parse();
-        if(packet.isValid()){
-            return packet;
-        }
-
-        return null;
+        return packet;
     }
 
     private static TubePacket getPacket(int type, JSONObject o){

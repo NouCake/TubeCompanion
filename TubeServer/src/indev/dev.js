@@ -13,17 +13,15 @@ const TubeTypes = require('../tubetypes')
  * @param {TubeCompanion} main 
  */
 function dev(main){
-    let id = "7KF31dRMeos";
+    let id = "dOB1tw4r7Cg";
     let data = new TubeData(id);
-    /*
-    main.dataHan.createTubeDataFolder(data);
+
+    //main.dataHan.createTubeDataFolder(data);
     ytdl.getInfo(id).then(info => {
         main.dwnldHan.downloadVideo(data, info);
-        
     });
-    */
+    console.log("Hello");
 
-    //main.dwnldHan.requestDownload(id);   
 
     let path = main.dataHan.getDataFilePath(data, TubeTypes.FILE_IMAGE)
     if(false)

@@ -104,7 +104,6 @@ public class LoginInputActivity extends AppCompatActivity {
         main.getHandler().sendEmptyMessage(TubeHandler.LOGIN_INPUT_READY);
     }
 
-
     public boolean isRememberChecked(){
         return remember.isChecked();
     }

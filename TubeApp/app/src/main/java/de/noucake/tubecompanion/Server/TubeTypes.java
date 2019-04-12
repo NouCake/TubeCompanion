@@ -29,12 +29,12 @@ public class TubeTypes {
     public static final int FILE_AUDIO =                301;
 
     //Request Types
-    //public static final int REQUEST_PENDING =           200;
-    //public static final int REQUEST_META =              201;
-    //public static final int REQUEST_COVER =             202;
-    //public static final int REQUEST_AUDIO =             203;
+    public static final int REQUEST_PENDING =           200;
+    public static final int REQUEST_META =              201;
+    public static final int REQUEST_COVER =             202;
+    public static final int REQUEST_AUDIO =             203;
 
     //MISC
-    public static final int DEFAULT_VALUE =             -8555; // magical random number
+    public static final int DEFAULT_VALUE =             -8555; // magical random number (and the number on my Licence Plate)
     public static final int BYTE_SIZE =                 1024;
 }

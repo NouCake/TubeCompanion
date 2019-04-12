@@ -22,8 +22,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TubeCompanion main;
     private DashboardView view;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard_layout);
 
@@ -32,29 +31,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         addDummyData();
     }
-
-    private void addDummyData(){
-        TubeData d = new TubeData("1234", "Hello", "World!");
-        d.setComplete(true);
-        main.addData(d);
-        d = new TubeData("1235", "Helly", "Belly!");
-        d.setComplete(true);
-        main.addData(d);
-        d = new TubeData("1236", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(false);
-        main.addData(d);
-        d = new TubeData("1237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        main.addData(d);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dashboard_menu, menu);
         return true;
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
             case R.id.dashboard_additem:
@@ -94,6 +75,21 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addDummyData(){
+        TubeData d = new TubeData("1234", "Hello", "World!");
+        d.setComplete(true);
+        main.addData(d);
+        d = new TubeData("1235", "Helly", "Belly!");
+        d.setComplete(true);
+        main.addData(d);
+        d = new TubeData("1236", "Hsdaaselly", "Bdadaselly!");
+        d.setComplete(false);
+        main.addData(d);
+        d = new TubeData("1237", "Hsdaaselly", "Bdadaselly!");
+        d.setComplete(true);
+        main.addData(d);
     }
 
     public DashboardView getView() {

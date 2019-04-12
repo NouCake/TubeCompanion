@@ -7,8 +7,10 @@ import de.noucake.tubecompanion.Server.TubeTypes;
 
 public class PendingRequestsRequest extends TubeRequest {
 
+    private String[] ids;
+
     public PendingRequestsRequest(int reqid){
-        super(reqid, TubeTypes.PENDING_DOWNLOAD_REQUEST);
+        super(reqid, TubeTypes.REQUEST_PENDING);
     }
 
     @Override
@@ -16,7 +18,12 @@ public class PendingRequestsRequest extends TubeRequest {
         assert p instanceof PendingRequestsPacket;
 
         PendingRequestsPacket packet = (PendingRequestsPacket)p;
+        ids = packet.getIds();
 
+        mFullfilled = true;
     }
 
+    public String[] getIds() {
+        return ids;
+    }
 }

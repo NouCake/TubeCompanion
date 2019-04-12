@@ -1,5 +1,6 @@
 package de.noucake.tubecompanion.Server;
 
+import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.Server.TubeTypes;
 
 public class TubePacketGenerator {
@@ -18,11 +19,16 @@ public class TubePacketGenerator {
         return packet;
     }
 
-    public static String generateRequestPendingPacket(int reqid, int reqtype){
+    public static String generateRequestPacket(TubeRequest req){
+        return generateRequestPacket(req.getType(), req.getReqID(), req.getReqtype());
+    }
+
+    public static String generateRequestPacket(int type, int reqid, int reqtype){
         String packet = "{";
-        packet += generateAttribute("type", 0, true);
+        packet += generateAttribute("type", type, true);
         packet += generateAttribute("reqid", reqid, true);
         packet += generateAttribute("reqtype", reqtype, false);
+        packet += "}";
         return packet;
     }
 

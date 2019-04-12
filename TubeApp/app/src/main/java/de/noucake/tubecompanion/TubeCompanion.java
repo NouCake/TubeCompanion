@@ -21,7 +21,6 @@ public class TubeCompanion {
             singleton = new TubeCompanion();
         }
         singleton.registerActivity(activity);
-        singleton.init();
         return singleton;
     }
     //SINGLETON END
@@ -74,6 +73,7 @@ public class TubeCompanion {
         }
 
         stopLogin();
+        server.sendPendingRequestsRequest();
     }
     public void onLoginInputActivityReady(){
         assert  loginActivity != null;

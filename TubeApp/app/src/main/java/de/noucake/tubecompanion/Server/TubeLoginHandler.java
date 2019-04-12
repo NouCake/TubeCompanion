@@ -32,19 +32,20 @@ public class TubeLoginHandler {
         setLoginCredentials(username, password);
         login();
     }
-
     public void login(){
         if(isLoggedIn()){
             Log.d("TubeCompanion-D", "Tried to login while Already is logged in");
             return;
         }
         if(!credentials){
-            onLoginFailed();
+            //TODO
+            //onLoginFailed();
             return;
         }
 
         if(!server.isConnected()){
-            onLoginFailed();
+            //TODO
+            //onLoginFailed();
             return;
         }
 
@@ -55,12 +56,30 @@ public class TubeLoginHandler {
     public void onLoginResponse(int responseType){
         Log.d("TubeCompanion-D", "Login Response: "+responseType);
         String errorMessage;
+        if(responseType == TubeTypes.LOGIN_SUCCESS) {
+            onLoginSuccess();
+        } else {
+            onLoginFailed(responseType);
+        }
+
+    }
+    public void onReconnect(){
+        if(lastLoginSucceed){
+            login();
+        }
+    }
+    public void onDisconnect(){
+        logged = false;
+    }
+
+    private void onLoginSuccess(){
+        server.onLoginSucceed();
+        main.onLoginSucceed(); //implicit stop login
+        logged = true;
+        lastLoginSucceed = true;
+    }
+    private void onLoginFailed(int responseType){
         switch (responseType){
-            case TubeTypes.LOGIN_SUCCESS:
-                main.onLoginSucceed(); //implicit stop login
-                logged = true;
-                lastLoginSucceed = true;
-                break;
             case TubeTypes.LOGIN_FAILED_ACTIV_CONNECTION:
                 lastLoginSucceed = false;
                 main.getHandler().displayMessage("Your are already logged in");
@@ -82,25 +101,6 @@ public class TubeLoginHandler {
                 main.requestLoginData();
                 break;
         }
-
-    }
-
-    public void onReconnect(){
-        if(lastLoginSucceed){
-            login();
-        }
-    }
-
-    public void onDisconnect(){
-        logged = false;
-    }
-
-    public boolean isLoggedIn(){
-        return logged && server.isConnected();
-    }
-
-    private void onLoginFailed(){
-
     }
 
     public void setLoginCredentials(String username, String password){
@@ -108,7 +108,8 @@ public class TubeLoginHandler {
         this.password = password;
         credentials = true;
     }
-
-
+    public boolean isLoggedIn(){
+        return logged && server.isConnected();
+    }
 
 }

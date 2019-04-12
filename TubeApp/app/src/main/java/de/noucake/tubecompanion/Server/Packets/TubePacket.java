@@ -19,6 +19,7 @@ public abstract class TubePacket {
     public void parse(){
         try {
             parseData();
+            mValid = true;
         } catch (JSONException e) {
             mValid = false;
         }

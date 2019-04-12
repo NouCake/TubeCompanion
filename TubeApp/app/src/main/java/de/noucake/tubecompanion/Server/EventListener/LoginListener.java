@@ -21,7 +21,9 @@ public class LoginListener implements Emitter.Listener {
     @Override
     public void call(Object... args) {
         TubePacket packet = PacketParser.parse(args);
-        handlePacket(packet);
+        if(packet != null && packet.isValid()){
+            handlePacket(packet);
+        }
     }
 
     private void handlePacket(TubePacket packet){

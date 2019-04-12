@@ -3,15 +3,13 @@ package de.noucake.tubecompanion.Server;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
-import com.github.nkzawa.socketio.client.IO;
-
-import java.net.URISyntaxException;
 
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Server.EventListener.ConnectListener;
+import de.noucake.tubecompanion.Server.EventListener.ResponseListener;
 import de.noucake.tubecompanion.Server.EventListener.LoginListener;
-import de.noucake.tubecompanion.Server.Requests.TubeConnectionHandler;
+import de.noucake.tubecompanion.Server.Requests.PendingRequestsRequest;
+import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.TubeCompanion;
 import de.noucake.tubecompanion.TubeHandler;
 
@@ -21,14 +19,21 @@ public class TubeServer {
 
     private final ConnectListener connectListener;
     private final LoginListener loginListener;
+    private final ResponseListener responseListener;
     private final TubeLoginHandler loginHandler;
     private final TubeConnectionHandler connectionHandler;
+    private final TubeRequestHandler requestHandler;
 
     public TubeServer(TubeCompanion main){
         this.main = main;
-        loginHandler = new TubeLoginHandler(main, this);
+
+        requestHandler = new TubeRequestHandler(main);
+        responseListener = new ResponseListener(main, requestHandler);
+
         connectListener = new ConnectListener(this);
         loginListener = new LoginListener(this);
+
+        loginHandler = new TubeLoginHandler(main, this);
         connectionHandler = new TubeConnectionHandler(this);
 
         loadHostAdress();
@@ -37,20 +42,49 @@ public class TubeServer {
     private void loadHostAdress(){
         String loadedHost = DataLoader.loadHostAdress(main.getMainActivity());
         if(loadedHost != null){
+            Log.d("TubeCompanion-D", "Setting host to " + loadedHost);
             connectionHandler.setHost(loadedHost);
         }
     }
+    private void sendRequest(TubeRequest req){
+        String packet = TubePacketGenerator.generateRequestPacket(req);
+        connectionHandler.send(TubeConnectionHandler.EVENT_REQUEST, packet);
+    }
 
     public void connect(){
-        connectionHandler.connect();
+        connectionHandler.initConnection();
         connectionHandler.addListener(TubeConnectionHandler.EVENT_CONNECT, connectListener);
+        connectionHandler.addListener(TubeConnectionHandler.EVENT_RECONNECT,
+                new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        loginHandler.onReconnect();
+                    }
+                });
+        connectionHandler.addListener(TubeConnectionHandler.EVENT_DISCONNECT,
+                new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        loginHandler.onDisconnect();
+                    }
+                });
+
+        connectionHandler.connect();
     }
     public void login(String username, String password){
         loginHandler.login(username, password);
     }
+    public void sendPendingRequestsRequest(){
+        PendingRequestsRequest req = new PendingRequestsRequest(TubeRequestHandler.getNextReqID());
+        requestHandler.addRequest(req);
+        sendRequest(req);
+    }
     public void sendPacketDirect(String tag, String packet){
         assert isConnected();
         connectionHandler.send(tag, packet);
+    }
+    public void registerPrivilegedListener(){
+        connectionHandler.addListener(TubeConnectionHandler.EVENT_RESPONSE, responseListener);
     }
 
     public void onConnected(){
@@ -65,6 +99,9 @@ public class TubeServer {
     }
     public void onLoginResponse(int responseType){
         loginHandler.onLoginResponse(responseType);
+    }
+    public void onLoginSucceed() {
+        registerPrivilegedListener();
     }
 
     public boolean isConnected(){

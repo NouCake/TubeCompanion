@@ -5,7 +5,7 @@ const SocketIO = require('socket.io');
 const Socket = require('socket.io/lib/socket');
 
 //Needed Imports
-const EventHandler = require('./events/eventhandler')
+const EventHandler = require('./eventhandler')
 const PacketSender = require('./packetsender')
 
 class TubeServer{

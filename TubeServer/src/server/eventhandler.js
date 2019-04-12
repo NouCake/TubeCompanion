@@ -1,12 +1,12 @@
-const LoginEvent = require('./loginevent');
-const DisconnectEvent = require('./disconnectevent');
-const AdminEvent = require('./adminevent');
-const RequestEvent = require('./requestevent');
-const YoutubeEvent = require('./youtubeevent');
+const LoginEvent = require('./events/loginevent');
+const DisconnectEvent = require('./events/disconnectevent');
+const AdminEvent = require('./events/adminevent');
+const RequestEvent = require('./events/requestevent');
+const YoutubeEvent = require('./events/youtubeevent');
 
 //Doc
-const TubeCompanion = require('../../tubecompanion');
-const TubeServer = require('../tubeserver')
+const TubeCompanion = require('../tubecompanion');
+const TubeServer = require('./tubeserver')
 const Socket = require('socket.io/lib/socket')
 
 

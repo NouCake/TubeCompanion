@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         main = TubeCompanion.getInstance(this);
+        main.init();
 
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
