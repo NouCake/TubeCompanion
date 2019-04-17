@@ -1,5 +1,7 @@
 package de.noucake.tubecompanion.Server;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Server.Packets.RequestResponsePacket;
+import de.noucake.tubecompanion.Server.Requests.FileRequest;
 import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.PendingRequestsRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
@@ -35,6 +38,9 @@ public class TubeRequestHandler {
             case TubeTypes.REQUEST_META:
                 onMetaDataRequestFullfilled((MetaDataRequest)req);
                 break;
+            case TubeTypes.REQUEST_FILE:
+                onFileRequestFullfilled((FileRequest) req);
+                break;
         }
     }
     private void onPendingRequestsRequestFullfilled(PendingRequestsRequest req){
@@ -55,9 +61,21 @@ public class TubeRequestHandler {
 
         main.onTubeDataUpdated();
     }
+    private void onFileRequestFullfilled(FileRequest req){
+        if(req.getFiletype() == TubeTypes.FILE_IMAGE){
+            TubeData data = main.getDataByID(req.getId());
+            if(data == null){
+                Log.d("TubeCompanion-D", "Error, No TubeData in main for requested data");
+                return;
+            }
+
+            data.setImage(BitmapFactory.decodeByteArray(req.getData(), 0, req.getFilesize()), req.getFilesize());
+        }
+        main.onTubeDataUpdated();
+    }
 
     public void onResponse(RequestResponsePacket packet){
-        Log.d("TubeCoompanion-D", "OnResponse : " + requests.size());
+        //Log.d("TubeCoompanion-D", "OnResponse : " + requests.size());
         TubeRequest req = getRequestByReqID(packet.getReqID());
         if(req == null){
             Log.d("TubeCoompanion-D", "Could not find Request with this ReqID");

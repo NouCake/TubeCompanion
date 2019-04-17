@@ -17,10 +17,13 @@ function dev(main){
     let data = new TubeData(id);
 
     //main.dataHan.createTubeDataFolder(data);
+    /**
+     * 
     ytdl.getInfo(id).then(info => {
         main.dwnldHan.downloadVideo(data, info);
     });
     console.log("Hello");
+     */
 
 
     let path = main.dataHan.getDataFilePath(data, TubeTypes.FILE_IMAGE)

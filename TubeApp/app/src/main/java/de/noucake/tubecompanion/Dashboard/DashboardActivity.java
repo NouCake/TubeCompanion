@@ -15,6 +15,7 @@ import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.R;
 import de.noucake.tubecompanion.Server.TubeServer;
+import de.noucake.tubecompanion.Server.TubeTypes;
 import de.noucake.tubecompanion.TubeCompanion;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -28,8 +29,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         main = TubeCompanion.getInstance(this);
         view = new DashboardView(this);
-
-        addDummyData();
     }
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dashboard_menu, menu);
@@ -38,11 +37,6 @@ public class DashboardActivity extends AppCompatActivity {
     @Override public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-            case R.id.dashboard_additem:
-                Random r = new Random();
-                String id = r.nextFloat()+"";
-                main.addData(new TubeData(id, "Random","Generator"));
-                break;
             case R.id.dashboard_removeall:
                 view.removeAll();
                 break;
@@ -73,25 +67,11 @@ public class DashboardActivity extends AppCompatActivity {
                 main.showLogin();
                 break;
             case R.id.dashboard_pending:
-                main.getServer().sendPendingRequestsRequest();
+                //main.getServer().sendPendingRequestsRequest();
+                main.getServer().sendFileRequest(new TubeData("3xl2sAypyMg"), TubeTypes.FILE_IMAGE);
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void addDummyData(){
-        TubeData d = new TubeData("1234", "Hello", "World!");
-        d.setComplete(true);
-        main.addData(d);
-        d = new TubeData("1235", "Helly", "Belly!");
-        d.setComplete(true);
-        main.addData(d);
-        d = new TubeData("1236", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(false);
-        main.addData(d);
-        d = new TubeData("1237", "Hsdaaselly", "Bdadaselly!");
-        d.setComplete(true);
-        main.addData(d);
     }
 
     public DashboardView getView() {

@@ -89,6 +89,8 @@ class TubeCompanion{
         packet.reqid = reqid;
         packet.id = id;
         packet.filetype = filetype;
+        packet.filesize = size;
+        
         //TODOs
         const bufferSize = 1024;
         const totalPackets = Math.floor((size+bufferSize-1)/bufferSize);
@@ -99,11 +101,13 @@ class TubeCompanion{
         let context = this;
         this.dataHan.getDataFile(data, filetype, bufferSize, 
             function(buffer, offset, chunksize){
-                packet.byteoffset = offset; //former: startbyte
-                packet.data = buffer;
-                packet.currentPacket = offset / bufferSize;
-                packet.chunksize = chunksize;
-                context.server.sendPacket(socket, "data", packet);
+                let cp = {};
+                Object.assign(cp, packet)
+                cp.byteoffset = offset; //former: startbyte
+                cp.data = buffer;
+                cp.currentPacket = offset / bufferSize;
+                cp.chunksize = chunksize;
+                context.server.sendPacket(socket, "data", cp);
             })
         
     }

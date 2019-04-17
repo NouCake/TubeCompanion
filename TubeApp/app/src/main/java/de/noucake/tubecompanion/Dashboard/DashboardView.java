@@ -106,7 +106,7 @@ public class DashboardView {
     }
     void updateAsHandler(){
         for(DashboardItem item : items){
-            item.updateViewData();
+            item.updateDataContent();
         }
         reorderItems();
     }

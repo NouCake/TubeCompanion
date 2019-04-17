@@ -33,16 +33,16 @@ public class TubeCompanion {
     private DashboardActivity dashboardActivity;
 
     private TubeHandler handler;
-    private TubeDataHolder dataHolder;
+    private TubeDataHolder dataholder;
 
     private TubeCompanion(){
     }
 
     public void init(){
-        server = new TubeServer(this);
+        dataholder = new TubeDataHolder();
         handler = new TubeHandler(this);
-        dataHolder = new TubeDataHolder();
 
+        server = new TubeServer(this);
         server.connect();
     }
 
@@ -55,9 +55,10 @@ public class TubeCompanion {
             dashboardActivity = (DashboardActivity)activity;
         }
     }
-    private void onIncompleteTubeDataAdded(TubeData data){
-        server.sendMetaDataRequest(data);
-        server.sendFileRequest(data, TubeTypes.FILE_IMAGE);
+    private void onIncompleteTubeDataLoaded(TubeData data){
+        if(!data.hasMeta())     server.sendMetaDataRequest(data);
+        if(!data.hasImage())    server.sendFileRequest(data, TubeTypes.FILE_IMAGE);
+        if(!data.isHasAudio())  server.sendFileRequest(data, TubeTypes.FILE_AUDIO);
     }
 
     public void onConnectionSucceed(){
@@ -133,17 +134,17 @@ public class TubeCompanion {
         Toast.makeText(mainActivity, msg, Toast.LENGTH_SHORT).show();
     }
     public void addData(TubeData data){
-        boolean success = dataHolder.addData(data);
+        boolean success = dataholder.addData(data);
         if(success){
             dashboardActivity.getView().addTubeData(data);
             if(!data.isComplete()){
-                onIncompleteTubeDataAdded(data);
+                onIncompleteTubeDataLoaded(data);
             }
         }
     }
 
     public TubeData getDataByID(String ID){
-        return dataHolder.findByID(ID);
+        return dataholder.findByID(ID);
     }
     public TubeHandler getHandler(){
         return handler;

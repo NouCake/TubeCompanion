@@ -7,7 +7,4 @@
     <item
         android:id="@+id/dashboard_item_context_remove"
         android:title="Remove" />
-    <item
-        android:id="@+id/dashboard_item_context_complete"
-        android:title="Set Incomplete" />
 </menu>

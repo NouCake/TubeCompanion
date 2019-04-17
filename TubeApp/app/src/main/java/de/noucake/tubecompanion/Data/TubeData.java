@@ -15,29 +15,30 @@ public class TubeData {
     private boolean downloading = false;
     private boolean complete = false;
 
+    private boolean hasMeta = false;
+    private boolean hasImage = false;
+    private boolean hasAudio = false;
+
     public TubeData(String id, String title, String author){
         this.id = id;
         this.title = title;
         this.author = author;
     }
-
     public TubeData(String id){
         this.id = id;
     }
 
     public int getDownloadProgress(){
         if(!downloading){
-            return 0;
+            int prog = 0;
+            if(hasMeta) prog += 33;
+            if(hasImage) prog += 33;
+            if(hasAudio) prog += 33;
+            return prog;
         }
         return 100;
     }
 
-    public boolean isComplete(){
-        return complete;
-    }
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
     public void setTitle(String title) {
         this.title = title;
     }
@@ -47,19 +48,46 @@ public class TubeData {
     public void setAudiosize(int audiosize) {
         this.audiosize = audiosize;
     }
-    public void setImagesize(int imagesize) {
-        this.imagesize = imagesize;
-    }
-    public void setImage(Bitmap image) {
-        this.image = image;
+
+    public void setDownloading(boolean downloading) {
+        this.downloading = downloading;
     }
 
-    public int getAudiosize() {
-        return audiosize;
+    public void setImage(Bitmap image, int imagesize) {
+        this.image = image;
+        this.imagesize = imagesize;
+        hasImage = true;
+        checkComplete();
     }
-    public int getImagesize() {
-        return imagesize;
+    public void setMeta(String title, String author){
+        this.title = title;
+        this.author = author;
+        this.hasMeta = true;
+        checkComplete();
     }
+    public void setAudio(int audiosize){
+        this.audiosize = audiosize;
+        this.hasAudio = true;
+        checkComplete();
+    }
+
+    private void checkComplete(){
+        if(hasMeta && hasImage && hasAudio){
+            complete = true;
+            downloading = false;
+        }
+    }
+
+    public boolean hasImage(){
+        return hasImage;
+    }
+    public boolean hasMeta(){
+        return hasMeta;
+    }
+    public boolean isHasAudio(){
+        return hasAudio;
+    }
+
     public Bitmap getImage() {
         return image;
     }
@@ -72,4 +100,9 @@ public class TubeData {
     public String getTitle() {
         return title;
     }
+    public boolean isComplete(){
+        return complete;
+    }
 }
+
+

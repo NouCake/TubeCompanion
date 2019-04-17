@@ -25,4 +25,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //TODO
+        //main.onDetroid
+        //Yes im funny.
+    }
 }

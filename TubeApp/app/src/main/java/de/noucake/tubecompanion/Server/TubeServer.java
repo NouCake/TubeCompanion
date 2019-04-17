@@ -91,7 +91,7 @@ public class TubeServer {
         sendRequest(req);
     }
     public void sendFileRequest(TubeData data, int filetype){
-         int reqid = TubeRequestHandler.getNextReqID();
+        int reqid = TubeRequestHandler.getNextReqID();
         FileRequest req = new FileRequest(reqid, data.getId(), filetype);
         requestHandler.addRequest(req);
         sendRequest(req);

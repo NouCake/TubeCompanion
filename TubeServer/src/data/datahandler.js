@@ -99,17 +99,18 @@ class DataHandler{
      * 
      * @param {TubeData} data 
      * @param {Number} FILE_TYPE 
+     * @returns {Number}
      */
     getDataFileSize(data, FILE_TYPE){
         switch(FILE_TYPE){
             case TubeTypes.FILE_IMAGE:
-                return data.imagesize;
+                return Number(data.imagesize);
 
             case TubeTypes.FILE_AUDIO:
-                return data.audiosize;
+                return Number(data.audiosize);
 
             case TubeTypes.FILE_VIDEO:
-                return data.videosize;
+                return Number(data.videosize);
         }
     }
 

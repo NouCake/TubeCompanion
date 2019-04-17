@@ -24,14 +24,13 @@ public class ResponseListener implements Emitter.Listener {
     @Override
     public void call(Object... args) {
         TubePacket packet = TubePacketParser.parse(args);
-        Log.d("TubeCompanion-Packet", args[0].toString());
+        //Log.d("TubeCompanion-Packet", args[0].toString());
         if(packet != null && packet.isValid()){
             handlePacket(packet);
         }
     }
 
     private void handlePacket(TubePacket packet){
-        Log.d("TubeCompanion-D", "Hello " + packet.getType());
         if(packet instanceof RequestResponsePacket){
             requestHandler.onResponse((RequestResponsePacket)packet);
         }

@@ -3,7 +3,7 @@
 const TubeServer = require('./tubeserver'); 
 
 //Consts
-const MAX_SENDING = 10; //Per second
+const MAX_SENDING = 25; //Per second
 
 class PacketSender{
 

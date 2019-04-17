@@ -111,6 +111,7 @@ FILE
 	type: 7				#
 	id: String			#
 	filetype: int		#
+	filesize: int		#
 	chunksize: int		#
 	startbyte: int		#
 	currentPackage: int	#

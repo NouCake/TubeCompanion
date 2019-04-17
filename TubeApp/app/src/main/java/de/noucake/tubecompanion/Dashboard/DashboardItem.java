@@ -1,15 +1,10 @@
 package de.noucake.tubecompanion.Dashboard;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.R;
@@ -33,7 +28,7 @@ public class DashboardItem {
         this.itemRoot = root;
 
         initViewContent();
-        updateViewData();
+        updateDataContent();
     }
 
     private void initViewContent(){
@@ -60,12 +55,17 @@ public class DashboardItem {
                 id = (TextView)v;
         }
     }
-    public void updateViewData(){
+
+    public void updateDataContent(){
         id.setText(data.getId());
         title.setText(data.getTitle());
         author.setText(data.getAuthor());
         prog.setProgress(data.getDownloadProgress());
-        image.setImageBitmap(DashboardView.defaultPicture);
+        if(data.hasImage()){
+            image.setImageBitmap(data.getImage());
+        } else {
+            image.setImageBitmap(DashboardView.defaultPicture);
+        }
         if(data.isComplete()){
             itemRoot.setBackgroundColor(colorComplete);
         } else {
@@ -73,14 +73,6 @@ public class DashboardItem {
         }
     }
 
-    public void setIncomplete(){
-        data.setComplete(false);
-        itemRoot.setBackgroundColor(colorIncomplete);
-    }
-    public void setComplete(){
-        data.setComplete(true);
-        itemRoot.setBackgroundColor(colorComplete);
-    }
     public TubeData getData() {
         return data;
     }
