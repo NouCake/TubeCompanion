@@ -122,19 +122,20 @@ class TubeCompanion{
             case TubeTypes.REQUEST_META:
                 this.sendRequestedMeta(account, packet.id, packet.reqid);
                 break;
-            case TubeTypes.REQUEST_COVER:
-            case TubeTypes.REQUEST_AUDIO:
-            case TubeTypes.REQUEST_VIDEO:
-                this.sendFile(socket, packet.id, packet.reqid, this.getFileTypeByRequestType(packet.reqtype));
+            case TubeTypes.REQUEST_COVER: //old
+            case TubeTypes.REQUEST_AUDIO: //old
+            case TubeTypes.REQUEST_VIDEO: //old
+            case TubeTypes.REQUEST_FILE:
+                this.sendFile(socket, packet.id, packet.reqid, packet.filetype);
                 break;
         }
     }
 
-    getFileTypeByRequestType(reqtype){
-        switch(reqtype){
-            case TubeTypes.REQUEST_COVER:
+    getFileEndingByFiletType(filetype){
+        switch(filetype){
+            case TubeTypes.FILE_IMAGE:
                 return TubeTypes.FILE_IMAGE;
-            case TubeTypes.REQUEST_AUDIO:
+            case TubeTypes.FILE_AUDIO:
                 return TubeTypes.FILE_AUDIO;
             case TubeTypes.REQUEST_VIDEO:
                 return TubeTypes.FILE_VIDEO;

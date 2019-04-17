@@ -1,5 +1,6 @@
 package de.noucake.tubecompanion.Server;
 
+import de.noucake.tubecompanion.Server.Requests.FileRequest;
 import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
 import de.noucake.tubecompanion.Server.TubeTypes;
@@ -19,7 +20,9 @@ public class TubePacketGenerator {
         packet += "}";
         return packet;
     }
-
+    public static String generateMetaDataRequest(MetaDataRequest req){
+        return generateMetaDataRequest(req.getType(), req.getReqID(), req.getReqtype(), req.getId());
+    }
     public static String generateRequestPacket(TubeRequest req){
 
         switch (req.getReqtype()){
@@ -27,9 +30,14 @@ public class TubePacketGenerator {
                 return generatePendingRequestsRequest(req.getType(), req.getReqID(), req.getReqtype());
             case TubeTypes.REQUEST_META:
                 return generateMetaDataRequest((MetaDataRequest) req);
+            case TubeTypes.REQUEST_FILE:
+                return  generateFileRequest((FileRequest) req);
         }
 
         return "";
+    }
+    public static String generateFileRequest(FileRequest req){
+        return generateFileRequest(req.getType(), req.getReqID(), req.getReqtype(), req.getId(), req.getFiletype());
     }
 
     private static String generatePendingRequestsRequest(int type, int reqid, int reqtype){
@@ -40,11 +48,6 @@ public class TubePacketGenerator {
         packet += "}";
         return packet;
     }
-
-    public static String generateMetaDataRequest(MetaDataRequest req){
-        return generateMetaDataRequest(req.getType(), req.getReqID(), req.getReqtype(), req.getId());
-    }
-
     private static String generateMetaDataRequest(int type, int reqid, int reqtype, String id){
         String packet = "{";
         packet += generateAttribute("type", type, true);
@@ -54,34 +57,20 @@ public class TubePacketGenerator {
         packet += "}";
         return packet;
     }
-
-    /**
-    public static String generateRequestPacket(TubeRequest req){
+    private static String generateFileRequest(int type, int reqid, int reqtype, String id, int filetype){
         String packet = "{";
-        packet += generateAttribute("type", TubeTypes.REQUEST,true);
-        packet += generateAttribute("reqid", req.getReqId(), true);
-        packet += generateAttribute("reqtype", req.getRequestedType(),false);
-        switch(req.getRequestedType()){
-            case ServerTypes.FILE:
-                FileRequest fr = (FileRequest)req;
-                packet += ",";
-                packet += generateAttribute("filetype", fr.getFiletype(),false);
-            case ServerTypes.META_DATA:
-                packet += ",";
-                packet += generateAttribute("id", ((DataRequest)req).getId(),false);
-                break;
-            default:
-                break;
-        }
+        packet += generateAttribute("type", type, true);
+        packet += generateAttribute("reqid", reqid, true);
+        packet += generateAttribute("reqtype", reqtype, true);
+        packet += generateAttribute("id", id, true);
+        packet += generateAttribute("filetype", filetype, false);
         packet += "}";
         return packet;
     }
-    */
 
     private static String generateAttribute(String attribute, String value, boolean comma){
         return "\""+attribute+"\":\""+value+"\"" + (comma ? ",":"");
     }
-
     private static String generateAttribute(String attribute, int value, boolean comma){
         return "\""+attribute+"\":"+value + (comma ? ",":"");
     }

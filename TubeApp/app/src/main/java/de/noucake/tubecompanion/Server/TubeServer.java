@@ -9,6 +9,7 @@ import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Server.EventListener.ConnectListener;
 import de.noucake.tubecompanion.Server.EventListener.ResponseListener;
 import de.noucake.tubecompanion.Server.EventListener.LoginListener;
+import de.noucake.tubecompanion.Server.Requests.FileRequest;
 import de.noucake.tubecompanion.Server.Requests.MetaDataRequest;
 import de.noucake.tubecompanion.Server.Requests.PendingRequestsRequest;
 import de.noucake.tubecompanion.Server.Requests.TubeRequest;
@@ -86,6 +87,12 @@ public class TubeServer {
      * (And Probably is in DataHolder)
      * */public void sendMetaDataRequest(TubeData data){
         MetaDataRequest req = new MetaDataRequest(TubeRequestHandler.getNextReqID(), data.getId());
+        requestHandler.addRequest(req);
+        sendRequest(req);
+    }
+    public void sendFileRequest(TubeData data, int filetype){
+         int reqid = TubeRequestHandler.getNextReqID();
+        FileRequest req = new FileRequest(reqid, data.getId(), filetype);
         requestHandler.addRequest(req);
         sendRequest(req);
     }

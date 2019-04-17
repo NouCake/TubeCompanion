@@ -33,6 +33,8 @@ public class TubeTypes {
     public static final int REQUEST_META =              201;
     public static final int REQUEST_COVER =             202;
     public static final int REQUEST_AUDIO =             203;
+    public static final int REQUEST_VIDEO =             204;
+    public static final int REQUEST_FILE  =             205;
 
     //MISC
     public static final int DEFAULT_VALUE =             -8555; // magical random number (and the number on my Licence Plate)

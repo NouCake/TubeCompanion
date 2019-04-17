@@ -11,6 +11,7 @@ import de.noucake.tubecompanion.Data.TubeData;
 import de.noucake.tubecompanion.Data.TubeDataHolder;
 import de.noucake.tubecompanion.Login.LoginInputActivity;
 import de.noucake.tubecompanion.Server.TubeServer;
+import de.noucake.tubecompanion.Server.TubeTypes;
 
 public class TubeCompanion {
 
@@ -56,6 +57,7 @@ public class TubeCompanion {
     }
     private void onIncompleteTubeDataAdded(TubeData data){
         server.sendMetaDataRequest(data);
+        server.sendFileRequest(data, TubeTypes.FILE_IMAGE);
     }
 
     public void onConnectionSucceed(){

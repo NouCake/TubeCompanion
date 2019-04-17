@@ -10,6 +10,13 @@ when receiving packet may numbers are received as string
 onRequest
 => move logic to event handler
 
+Crash: request metadata without id
+Crash: file request with wrong filetype;
+
+multiple downloads when requesting same yt
+
+debug file sending
+
 App
 ###
 Packets send queue (when packet send command are incomming while client is not logged in)

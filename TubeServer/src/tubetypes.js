@@ -26,6 +26,7 @@ module.exports = {
     REQUEST_COVER:				202,
     REQUEST_AUDIO:				203,
     REQUEST_VIDEO:				204,
+    REQUEST_FILE:               205,
 
     //FILE TYPES
     FILE_IMAGE:                 300,

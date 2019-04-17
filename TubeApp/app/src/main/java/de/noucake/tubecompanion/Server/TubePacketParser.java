@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.noucake.tubecompanion.Server.Packets.FilePacket;
 import de.noucake.tubecompanion.Server.Packets.LoginResponsePacket;
 import de.noucake.tubecompanion.Server.Packets.MetaDataPacket;
 import de.noucake.tubecompanion.Server.Packets.PendingRequestsPacket;
@@ -42,6 +43,8 @@ public class TubePacketParser {
                 return new PendingRequestsPacket(o);
             case TubeTypes.META_DATA:
                 return new MetaDataPacket(o);
+            case TubeTypes.FILE:
+                return new FilePacket(o);
         }
         Log.d("TubeCompanion-D","Unsupported Packet Type " + type);
         return null;
