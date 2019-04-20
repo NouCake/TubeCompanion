@@ -55,7 +55,7 @@ public class TubeRequestHandler {
             return;
         }
 
-        data.setTitle(req.getTitle());
+        data.setMeta(req.getTitle(), req.getAuthor());
         //data.setImagesize(req.getImagesize());
         //data.setAudiosize(req.getAudiosize());
 
@@ -85,7 +85,7 @@ public class TubeRequestHandler {
         req.onResponse(packet);
         if(req.isFullfilled()){
             onRequestFullfilled(req);
-            Log.d("TubeCompanion-D", "Request Removed");
+            Log.d("TubeCompanion-D", "Request " + req.getReqID() +" Removed (" + req.getReqtype() + ")");
             requests.remove(req);
         }
     }

@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //main.onDestory();
+
         //TODO
         //main.onDetroid
         //Yes im funny.

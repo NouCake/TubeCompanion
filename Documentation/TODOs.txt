@@ -21,7 +21,7 @@ App
 ###
 Packets send queue (when packet send command are incomming while client is not logged in)
 
-
+multiple data with same id in view
 
 #####################
 //DONE

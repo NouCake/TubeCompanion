@@ -10,6 +10,7 @@ public class MetaDataRequest extends TubeRequest {
 
     private String id;
     private String title;
+    private String author;
     //private int imagesize;
     //private int audiosize;
     //private int videosize;
@@ -39,6 +40,10 @@ public class MetaDataRequest extends TubeRequest {
     }
     public String getTitle() {
         return title;
+    }
+
+    public String getAuthor() {
+        return author;
     }
     /*
     public int getImagesize() {

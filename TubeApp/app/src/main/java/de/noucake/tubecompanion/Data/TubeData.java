@@ -18,6 +18,7 @@ public class TubeData {
     private boolean hasMeta = false;
     private boolean hasImage = false;
     private boolean hasAudio = false;
+    private boolean dirty = false;
 
     public TubeData(String id, String title, String author){
         this.id = id;
@@ -26,6 +27,8 @@ public class TubeData {
     }
     public TubeData(String id){
         this.id = id;
+
+        dirty = true;
     }
 
     public int getDownloadProgress(){
@@ -41,12 +44,15 @@ public class TubeData {
 
     public void setTitle(String title) {
         this.title = title;
+        dirty = true;
     }
     public void setAuthor(String author) {
         this.author = author;
+        dirty = true;
     }
     public void setAudiosize(int audiosize) {
         this.audiosize = audiosize;
+        dirty = true;
     }
 
     public void setDownloading(boolean downloading) {
@@ -57,17 +63,20 @@ public class TubeData {
         this.image = image;
         this.imagesize = imagesize;
         hasImage = true;
+        dirty = true;
         checkComplete();
     }
     public void setMeta(String title, String author){
         this.title = title;
         this.author = author;
         this.hasMeta = true;
+        dirty = true;
         checkComplete();
     }
     public void setAudio(int audiosize){
         this.audiosize = audiosize;
         this.hasAudio = true;
+        dirty = true;
         checkComplete();
     }
 
@@ -102,6 +111,20 @@ public class TubeData {
     }
     public boolean isComplete(){
         return complete;
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+    public void clearDirty() {
+        dirty = true;
+    }
+
+    public int getImagesize() {
+        return imagesize;
+    }
+    public int getAudiosize() {
+        return audiosize;
     }
 }
 

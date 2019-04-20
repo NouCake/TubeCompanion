@@ -34,4 +34,7 @@ public class TubeDataHolder {
         return null;
     }
 
+    public List<TubeData> getData() {
+        return data;
+    }
 }

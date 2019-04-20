@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.List;
+
 import de.noucake.tubecompanion.Dashboard.DashboardActivity;
 import de.noucake.tubecompanion.Data.DataLoader;
 import de.noucake.tubecompanion.Data.TubeData;
@@ -41,11 +43,16 @@ public class TubeCompanion {
     public void init(){
         dataholder = new TubeDataHolder();
         handler = new TubeHandler(this);
-
         server = new TubeServer(this);
         server.connect();
     }
 
+    public void loadData(){
+        List<TubeData> data = DataLoader.loadTubeData(mainActivity);
+        for(TubeData d : data){
+            addData(d);
+        }
+    }
     private void registerActivity(Activity activity){
         if(activity instanceof MainActivity){
             mainActivity = (MainActivity)activity;
@@ -89,6 +96,12 @@ public class TubeCompanion {
     }
     public void onTubeDataUpdated(){
         dashboardActivity.getView().update();
+    }
+    public void onDestory(){
+        DataLoader.saveTubeData(mainActivity, dataholder.getData());
+    }
+    public void onDashboardReady(){
+        loadData();
     }
 
     private void startLoginActivity(){
@@ -157,5 +170,10 @@ public class TubeCompanion {
     }
     public MainActivity getMainActivity() {
         return mainActivity;
+    }
+
+    public void removeAll() {
+        dashboardActivity.getView().removeAll();
+        dataholder.getData().clear();
     }
 }

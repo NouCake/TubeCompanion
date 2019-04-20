@@ -29,6 +29,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         main = TubeCompanion.getInstance(this);
         view = new DashboardView(this);
+        main.onDashboardReady();
     }
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dashboard_menu, menu);
@@ -38,7 +39,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.dashboard_removeall:
-                view.removeAll();
+                main.removeAll();
                 break;
             case R.id.dashboard_host:
                 //TODO: CHANGE
@@ -67,8 +68,15 @@ public class DashboardActivity extends AppCompatActivity {
                 main.showLogin();
                 break;
             case R.id.dashboard_pending:
-                //main.getServer().sendPendingRequestsRequest();
-                main.getServer().sendFileRequest(new TubeData("3xl2sAypyMg"), TubeTypes.FILE_IMAGE);
+                main.getServer().sendPendingRequestsRequest();
+                //main.getServer().sendFileRequest(new TubeData("3xl2sAypyMg"), TubeTypes.FILE_IMAGE);
+                break;
+            case R.id.dashboars_save:
+                main.onDestory();
+                break;
+            case R.id.dashboard_load:
+                main.loadData();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
